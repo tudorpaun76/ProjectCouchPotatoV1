@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "vue@3.3.12",
+      "destination": "wwwroot/lib/vue"
+    },
+    {
+      "library": "bootstrap@5.3.2",
+      "destination": "wwwroot/lib/bootstrap-3.4.1-dist/js/"
+    },
+    {
+      "library": ""
+    }
+  ]
+}

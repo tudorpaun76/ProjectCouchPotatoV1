@@ -1,12 +1,27 @@
-
+using ProjectCouchPotatoV1.Search;
+using ProjectCouchPotatoV1.Models;
+using ProjectCouchPotatoV1.Controllers;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddLogging();
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<ITMDBService, TMDBService>();
+builder.Services.AddScoped<ITMDBService, TMDBService>();
+builder.Services.AddLogging(builder =>
+{
+    builder.AddConsole();
+});
+builder.Services.AddMvc(options => options.ModelValidatorProviders.Clear());
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
 var app = builder.Build();
 
@@ -24,7 +39,7 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}");
+    endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
     endpoints.MapRazorPages();
 });
 

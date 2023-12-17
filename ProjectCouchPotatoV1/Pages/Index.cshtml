@@ -1,7 +1,20 @@
 ﻿@page
 @model ProjectCouchPotatoV1.Pages.IndexModel
 @{
+    ViewData["Title"] = "Home page";
 }
-<div>
-	<div>Couch Potato</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container mt-4">
+    <form class="form-inline" method="get" action="/movie">
+        <div class="form-group mx-sm-3 mb-2 p-2">
+            <h2>Welcome to the Couch Potato Application!</h2>
+            <label for="movieId" class="sr-only">Enter movie ID below</label>
+            <input type="text" class="form-control p-2" id="movieId" name="id" placeholder="Movie ID" required />
+            <button type="submit" class="btn btn-secondary mb-2 mt-2">Submit</button>
+        </div>
+    </form>
 </div>
+
+
+
