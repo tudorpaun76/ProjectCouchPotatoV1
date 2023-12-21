@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ProjectCouchPotatoV1.Migrations;
 using ProjectCouchPotatoV1.Models;
 using System.Net.Http.Headers;
 
@@ -13,16 +17,19 @@ namespace ProjectCouchPotatoV1.Search
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<TMDBService> _logger;
+        private readonly MovieDbContext _dbContext;
 
-        public TMDBService(HttpClient httpClient, ILogger<TMDBService> logger)
+        public TMDBService(HttpClient httpClient, ILogger<TMDBService> logger, MovieDbContext dbContext)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _dbContext = dbContext; 
         }
 
-        public async Task<Movie>GetMovieById(string id)
+        public async Task<Movie> GetMovieById(string id)
         {
             Movie movie;
+
             using (var client = new HttpClient())
             {
                 {
@@ -41,18 +48,18 @@ namespace ProjectCouchPotatoV1.Search
 
                     movie = Newtonsoft.Json.JsonConvert.DeserializeObject<Movie>(body);
 
-                    movie.Id = movieId;
-                    movie.Title = movie.Title; 
-                    movie.Overview = movie.Overview;
-                    movie.poster_path = movie.poster_path;
+                    movie.MovieId = movieId;
+                    //movie.Title = movie.Title; 
+                    //movie.Overview = movie.Overview;
+                    //movie.poster_path = movie.poster_path;
 
-                    _logger.LogInformation($"Id: {movie.Id}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
-
+                    _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
 
                     return movie;
                 }
             }
         }
+
     }
 }
 
