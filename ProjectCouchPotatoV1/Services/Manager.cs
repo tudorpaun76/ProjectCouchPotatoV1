@@ -49,9 +49,9 @@ namespace ProjectCouchPotatoV1.Search
                     movie = Newtonsoft.Json.JsonConvert.DeserializeObject<Movie>(body);
 
                     movie.MovieId = movieId;
-                    //movie.Title = movie.Title; 
-                    //movie.Overview = movie.Overview;
-                    //movie.poster_path = movie.poster_path;
+                    movie.Title = movie.Title; 
+                    movie.Overview = movie.Overview;
+                    movie.poster_path = movie.poster_path;
 
                     _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
 

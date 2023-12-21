@@ -44,7 +44,14 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(movie);
         }
 
-
+        [HttpGet]
+        [Route("getmovies")]
+        [AllowAnonymous]
+        public IActionResult GetMovies()
+        {
+            var movie = _dbContext.Movies.ToList();
+            return Ok(movie);
+        }
 
     }
 }
