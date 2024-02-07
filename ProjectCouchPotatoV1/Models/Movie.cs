@@ -5,8 +5,7 @@ namespace ProjectCouchPotatoV1.Models
 {
     public class Movie
     {
-        [Key]
-        public int Identifier { get; set; }
+        public int Id { get; set; }
         public string MovieId { get; set; }
         public string Title { get; set; }
         public string Overview { get; set; }

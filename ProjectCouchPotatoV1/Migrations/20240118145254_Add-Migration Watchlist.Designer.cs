@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCouchPotatoV1.Models;
 
@@ -10,9 +11,11 @@ using ProjectCouchPotatoV1.Models;
 namespace ProjectCouchPotatoV1.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240118145254_Add-Migration Watchlist")]
+    partial class AddMigrationWatchlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,11 +26,11 @@ namespace ProjectCouchPotatoV1.Migrations
 
             modelBuilder.Entity("ProjectCouchPotatoV1.Models.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Identifier")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Identifier"));
 
                     b.Property<string>("MovieId")
                         .IsRequired()
@@ -49,9 +52,38 @@ namespace ProjectCouchPotatoV1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Identifier");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("ProjectCouchPotatoV1.Models.Watchlist", b =>
+                {
+                    b.Property<int>("Identifier")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Identifier"));
+
+                    b.Property<string>("MovieId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Overview")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("poster_path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Identifier");
+
+                    b.ToTable("Watchlist");
                 });
 #pragma warning restore 612, 618
         }

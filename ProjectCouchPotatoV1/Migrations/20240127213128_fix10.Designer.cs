@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCouchPotatoV1.Models;
 
@@ -10,9 +11,11 @@ using ProjectCouchPotatoV1.Models;
 namespace ProjectCouchPotatoV1.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240127213128_fix10")]
+    partial class fix10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,6 +31,10 @@ namespace ProjectCouchPotatoV1.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MovieId")
                         .IsRequired()
@@ -52,6 +59,17 @@ namespace ProjectCouchPotatoV1.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Reviews");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Movie");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("ProjectCouchPotatoV1.Models.Watchlist", b =>
+                {
+                    b.HasBaseType("ProjectCouchPotatoV1.Models.Movie");
+
+                    b.HasDiscriminator().HasValue("Watchlist");
                 });
 #pragma warning restore 612, 618
         }

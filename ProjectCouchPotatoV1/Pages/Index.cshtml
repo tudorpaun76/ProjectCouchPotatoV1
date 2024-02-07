@@ -4,45 +4,102 @@
     ViewData["Title"] = "Home page";
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<div class="container mt-4">
-    <form class="form-inline" method="get" action="/movie">
+<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/vue3.js"></script>
+<script src="/lib/axios.min.js"></script>
+<script src="/lib/bootstrap.bundle.min.js"></script>
+<link href="/lib/bootstrap.min.css" rel="stylesheet">
+
+<div id="search" class="container mt-4">
+    <form class="form-inline" method="get" action="/movie/search">
         <div class="form-group mx-sm-3 mb-2 p-2">
-            <h2>Welcome to the Couch Potato Application!</h2>
-            <label for="movieId" class="sr-only">Enter movie ID below</label>
-            <input type="text" class="form-control p-2" id="movieId" name="id" placeholder="Movie ID" required />
+            <label for="movieName" class="sr-only">Enter movie name below</label>
+            <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Movie Name" required>
             <button type="submit" class="btn btn-secondary mb-2 mt-2">Search</button>
         </div>
     </form>
 </div>
 
-
 <div class="mt-2" id="app">
     <div class="container">
-        <h3>Your Reviews:</h3>
-        <div class="row">
-            <div v-for="movie in movies" :key="movie.identifier" class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ movie.title }}</h5>
-                        <p class="card-text"><strong>Review:</strong> {{ movie.review }}</p>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Your Reviews:
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">
+                        <img src="svg/plus.svg">
+                    </button>
+                </h3>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Search movie to add a review</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-inline" method="get" action="/movie/search">
+                                    <div class="mb-3">
+                                        <label for="movieName" class="sr-only">Search</label>
+                                        <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Search Movie" required>
+                                        <button type="submit" class="btn btn-primary mb-2 mt-2">Search</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div v-for="movie in movies" :key="movie.id" class="col-md-6">
+                        <div class="card mb-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{ movie.title }}</li>
+                            </ul>
+                            <div v-if="selectedMovie && selectedMovie.id === movie.id" class="custom-modal">
+                                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header"><strong>Review:</strong></div>
+                                            <div class="modal-body">
+                                                <div class="modal-dialog modal-dialog-scrollable">
+                                                    <p class="text-left">{{ selectedMovie.review }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn"><img src="svg/pen.svg"></button>
+                                                <button type="button" class="btn" v-on:click="deleteMovie(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary mb-2" v-on:click="openModal(movie)">
+                                <img src="svg/eye.svg">
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
     const app = Vue.createApp({
         data() {
             return {
                 movies: [],
+                selectedMovie: null,
+                isEditing: false,
+                editedReview: ''
             };
         },
         methods: {
@@ -55,9 +112,50 @@
                         console.error('Error getting movies:', error);
                     });
             },
+            openModal(movie) {
+                this.selectedMovie = movie;
+                this.$nextTick(() => { // <-- class stuff
+                    $('#reviewModal').modal('show'); 
+                });
+            },
+            closeModal() {
+                this.selectedMovie = null;
+            },
+            openEditModal() {
+                this.isEditing = true;
+                this.editedReview = this.selectedMovie.review;
+            },
+            cancelEdit() {
+                this.isEditing = false;
+                this.editedReview = '';
+            },
+            deleteMovie(id) {
+                axios.delete(`/movie/delete?movieid=${id}`)
+                    .then(response => {
+                        console.log('Deleted movie:', response.data);
+                        this.movies = this.movies.filter(movie => movie.id !== id);
+                        this.closeModal();
+                        $('#reviewModal').modal('hide');
+                    })
+                    .catch(error => {
+                        console.error('Error deleting movie:', error);
+                    });
+            },
+            updateReview(id) {
+                axios.put(`/movie/update?movieid=${id}`, { review: this.editedReview })
+                    .then(response => {
+                        this.selectedMovie.review = response.data.review;
+                    })
+                    .catch(error => {
+                        console.error('Error updating review:', error);
+                    });
+                this.isEditing = false;
+                this.editedReview = '';
+            },
         },
         mounted() {
             this.fetchMovies();
+            $('#reviewModal').modal({ show: true });
         }
     });
 
@@ -66,7 +164,22 @@
 </script>
 
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+
+
+
+
+@*                            <button type="button" class="btn btn-danger" v-on:click="deleteMovie(selectedMovie.id)">Delete</button>
+                                        <button type="button" class="btn btn-secondary m-1" v-on:click="closeModal">Close</button>
+                                        <div v-if="isEditing" class="edit-modal">
+                                            <div class="modal-overlay" v-on:click="cancelEdit"></div>
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <textarea v-model="editedReview" rows="4" cols="50"></textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" v-on:click="updateReview">Save</button>
+                                                    <button type="button" class="btn btn-secondary m-1" v-on:click="cancelEdit">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>*@
