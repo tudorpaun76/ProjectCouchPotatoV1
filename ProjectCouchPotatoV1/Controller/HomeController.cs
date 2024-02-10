@@ -26,25 +26,7 @@ namespace ProjectCouchPotatoV1.Controllers
             _dbContext = dbContext;
         }
 
-        //[Route("search")]
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GetMovieById(string id)
-        //{
-        //    var data = await _tmdbService.GetMovieById(id);
-        //    return View(data);
-        //}
-
-
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GetAutoCompleteSuggestions(string query) 
-        //{
-        //    var data = await _tmdbService.GetAutoCompleteSuggestions(query);
-        //    return View(data);
-        //}
-
-        [Route("search")]
+        [Route("review")]
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetMovieByName(string name)
@@ -53,14 +35,32 @@ namespace ProjectCouchPotatoV1.Controllers
             return View(data);
         }
 
+        [Route("searchwatchlist")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchWatchlist(string name)
+        {
+            var data = await _tmdbService.GetMovieByName(name);
+            return View(data);
+        }
+
+        [Route("search")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(string name)
+        {
+            var data = await _tmdbService.GetMovieByName(name);
+            return View(data);
+        }
+
         [HttpPost]
         [Route("submit")]
         [AllowAnonymous]
-        public async Task<IActionResult> SaveMovieToDatabase([FromBody] Movie watchlist)
+        public async Task<IActionResult> SaveMovieToDatabase([FromBody] Review review)
         {
-            _dbContext.Reviews.Add(watchlist);
+            _dbContext.Reviews.Add(review);
             await _dbContext.SaveChangesAsync();
-            return Ok(watchlist);
+            return Ok(review);
         }
 
         [HttpGet]
@@ -72,8 +72,27 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(movie);
         }
 
+        [HttpPost]
+        [Route("watchlist")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveWatchlistToDatabase([FromBody] Watchlist watchlist)
+        {
+            _dbContext.Watchlists.Add(watchlist);
+            await _dbContext.SaveChangesAsync();
+            return Ok(watchlist);
+        }
+
+        [HttpGet]
+        [Route("getwatchlist")]
+        [AllowAnonymous]
+        public IActionResult GetWatchlist ()
+        {
+            var watchlist = _dbContext.Watchlists.ToList();
+            return Ok(watchlist);
+        }
+
         [HttpDelete]
-        [Route("delete")]
+        [Route("deletereview")]
         [AllowAnonymous]
         public IActionResult DeleteReview(int movieid)
         {
@@ -88,26 +107,21 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(movie);
         }
 
-
-
-        //FIX THIS
-        [HttpPut]
-        [Route("update")]
+        [HttpDelete]
+        [Route("deletewatchlist")]
         [AllowAnonymous]
-        public IActionResult UpdateReview([FromBody] Movie updatedReview)
+        public IActionResult DeleteWatchlist(int movieid)
         {
-            var movie = _dbContext.Reviews.Find(updatedReview);
+            var movie = _dbContext.Watchlists.Find(movieid);
             if (movie == null)
             {
                 return NotFound();
             }
-            _dbContext.Reviews.Update(movie);
+            _dbContext.Watchlists.Remove(movie);
             _dbContext.SaveChanges();
+
             return Ok(movie);
         }
-
-
-
 
     }
 }

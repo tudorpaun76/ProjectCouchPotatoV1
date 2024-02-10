@@ -2,6 +2,8 @@
 {
     public class MovieSearch
     {
-        public List<Movie> Results { get; set; }
+        public List<Review> Results { get; set; }
+
+        public List<Watchlist> Watchlists { get; set; }
     }
 }

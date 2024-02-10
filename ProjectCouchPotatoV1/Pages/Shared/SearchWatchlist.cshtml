@@ -14,44 +14,40 @@
             <div class="row">
                 <div class="col-md-8">
                     <img src="https://image.tmdb.org/t/p/w500/@Model.poster_path" alt="Movie Image" class="img-fluid">
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Review</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" v-model="movie.ReviewText" rows="3"></textarea>
-                        <button class="btn btn-secondary mt-2" v-on:click="submitForm">Submit</button>
-                        <div>
+                   </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <button class="btn btn-secondary mt-2" v-on:click="submitWatchlist">Add to watchlist</button>
                             <button class="btn btn-secondary mt-2" v-on:click="redirectToHome">Return to home</button>
-                        </div>
-                        <div v-if="submitSuccess" class="alert alert-success mt-2" role="alert">
-                            Submit successful!
+                        <div v-if="showSuccess" class="alert alert-success mt-2" role="alert">
+                                Submit successful!
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 <script>
     const app = Vue.createApp({
         data() {
             return {
-                movie: {
+                watchlist: {
                     MovieId: "@Model.MovieId",
                     Title: "@Model.Title",
                     Overview: "@Model.Overview",
                     poster_path: "@Model.poster_path",
-                    ReviewText: ""
                 },
                 showSuccess: false,
 
             };
         },
         methods: {
-            submitForm() {
-                axios.post('/movie/submit', this.movie)
+            submitWatchlist() {
+                axios.post('/movie/watchlist', this.watchlist)
                     .then(response => {
-                        this.movie = response.data;
+                        this.watchlist = response.data;
                         this.submitSuccess = true;
                         console.log('Success:', response.data);
                     })
@@ -69,6 +65,4 @@
     app.mount('#app');
 
 </script>
-
-
 

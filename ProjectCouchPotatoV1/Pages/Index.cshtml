@@ -21,16 +21,17 @@
 </div>
 
 <div class="mt-2" id="app">
+
+    @*/////////////////////          REVIEW                ////////////////////////////*@
     <div class="container">
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">
                     Your Reviews:
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">
-                        <img src="svg/plus.svg">
+                        <img src="svg/plus.svg">Add Review
                     </button>
                 </h3>
-
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -39,7 +40,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-inline" method="get" action="/movie/search">
+                                <form class="form-inline" method="get" action="/movie/review">
                                     <div class="mb-3">
                                         <label for="movieName" class="sr-only">Search</label>
                                         <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Search Movie" required>
@@ -51,8 +52,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div v-for="movie in movies" :key="movie.id" class="col-md-6">
                         <div class="card mb-3">
@@ -66,12 +65,12 @@
                                             <div class="modal-header"><strong>Review:</strong></div>
                                             <div class="modal-body">
                                                 <div class="modal-dialog modal-dialog-scrollable">
-                                                    <p class="text-left">{{ selectedMovie.review }}</p>
+                                                    <p class="text-left">{{ selectedMovie.reviewText }}</p>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn"><img src="svg/pen.svg"></button>
-                                                <button type="button" class="btn" v-on:click="deleteMovie(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                <button type="button" class="btn" v-on:click="deleteReview(selectedMovie.id)"><img src="svg/trash.svg"></button>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
                                             </div>
                                         </div>
@@ -80,7 +79,7 @@
                             </div>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary mb-2" v-on:click="openModal(movie)">
+                            <button type="button" class="btn btn-primary mb-2" v-on:click="openReview(movie)">
                                 <img src="svg/eye.svg">
                             </button>
                         </div>
@@ -90,13 +89,84 @@
         </div>
     </div>
 
+
+    @*/////////////////////          Watchlist         ////////////////////////////*@
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Your Watchlist:
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#watchlistModal" style="float: right;">
+                        <img src="svg/plus.svg">Add Watchlist
+                    </button>
+                </h3>
+                <div class="modal fade" id="watchlistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="watchlistModalLabel">Search movie to add to watchlist</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-inline" method="get" action="/movie/searchwatchlist">
+                                    <div class="mb-3">
+                                        <label for="movieName" class="sr-only">Search</label>
+                                        <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Search Movie" required>
+                                        <button type="submit" class="btn btn-primary mb-2 mt-2">Search</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div v-for="watchlist in watchlists" :key="watchlist.id" class="col-md-6">
+                        <div class="card mb-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{ watchlist.title }}</li>
+                            </ul>
+                            <div v-if="selectedMovie && selectedMovie.id === watchlist.id" class="custom-modal">
+                                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header"><strong>Watchlist:</strong></div>
+                                            <div class="modal-body">
+                                                <div class="modal-dialog modal-dialog-scrollable">
+                                                    <p class="text-left">{{ selectedMovie.title }}</p>
+                                                    <p class="text-left">{{ selectedMovie.overview }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn" v-on:click="deleteWatchlist(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary mb-2" v-on:click="openWatchlist(watchlist)">
+                                <img src="svg/eye.svg">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 
 <script>
     const app = Vue.createApp({
         data() {
             return {
                 movies: [],
+                watchlists: [],
                 selectedMovie: null,
                 isEditing: false,
                 editedReview: ''
@@ -112,10 +182,27 @@
                         console.error('Error getting movies:', error);
                     });
             },
-            openModal(movie) {
+            fetchWatchlists() {
+                axios.get('/movie/getwatchlist')
+                    .then(response => {
+                        debugger
+                        console.log('Watchlist data:', response.data);
+                        this.watchlists = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error getting movies:', error);
+                    });
+            },
+            openReview(movie) {
                 this.selectedMovie = movie;
                 this.$nextTick(() => { // <-- class stuff
                     $('#reviewModal').modal('show'); 
+                });
+            },
+            openWatchlist(watchlist) {
+                this.selectedMovie = watchlist;
+                this.$nextTick(() => { // <-- class stuff
+                    $('#reviewModal').modal('show');
                 });
             },
             closeModal() {
@@ -123,14 +210,14 @@
             },
             openEditModal() {
                 this.isEditing = true;
-                this.editedReview = this.selectedMovie.review;
+                this.editedReview = this.selectedMovie.ReviewText;
             },
             cancelEdit() {
                 this.isEditing = false;
                 this.editedReview = '';
             },
-            deleteMovie(id) {
-                axios.delete(`/movie/delete?movieid=${id}`)
+            deleteReview(id) {
+                axios.delete(`/movie/deletereview?movieid=${id}`)
                     .then(response => {
                         console.log('Deleted movie:', response.data);
                         this.movies = this.movies.filter(movie => movie.id !== id);
@@ -141,20 +228,22 @@
                         console.error('Error deleting movie:', error);
                     });
             },
-            updateReview(id) {
-                axios.put(`/movie/update?movieid=${id}`, { review: this.editedReview })
+            deleteWatchlist(id) {
+                axios.delete(`/movie/deletewatchlist?movieid=${id}`)
                     .then(response => {
-                        this.selectedMovie.review = response.data.review;
+                        console.log('Deleted movie:', response.data);
+                        this.watchlists = this.watchlists.filter(watchlist => watchlist.id !== id);
+                        this.closeModal();
+                        $('#reviewModal').modal('hide');
                     })
                     .catch(error => {
-                        console.error('Error updating review:', error);
+                        console.error('Error deleting movie:', error);
                     });
-                this.isEditing = false;
-                this.editedReview = '';
             },
         },
         mounted() {
             this.fetchMovies();
+            this.fetchWatchlists();
             $('#reviewModal').modal({ show: true });
         }
     });
@@ -167,19 +256,3 @@
 
 
 
-
-
-@*                            <button type="button" class="btn btn-danger" v-on:click="deleteMovie(selectedMovie.id)">Delete</button>
-                                        <button type="button" class="btn btn-secondary m-1" v-on:click="closeModal">Close</button>
-                                        <div v-if="isEditing" class="edit-modal">
-                                            <div class="modal-overlay" v-on:click="cancelEdit"></div>
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <textarea v-model="editedReview" rows="4" cols="50"></textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" v-on:click="updateReview">Save</button>
-                                                    <button type="button" class="btn btn-secondary m-1" v-on:click="cancelEdit">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>*@

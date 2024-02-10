@@ -10,7 +10,8 @@ namespace ProjectCouchPotatoV1.Models
         {
  
         }
-        public DbSet<Movie> Reviews { get; set; }
-        
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Watchlist> Watchlists { get; set; }
+
     }
 }

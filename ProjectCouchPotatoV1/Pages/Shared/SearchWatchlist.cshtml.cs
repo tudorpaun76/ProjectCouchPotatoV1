@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ProjectCouchPotatoV1.Pages.Views
+namespace ProjectCouchPotatoV1.Pages.Shared
 {
-    public class GetMovieByIdModel : PageModel
+    public class SearchWatchlistModel : PageModel
     {
         public void OnGet()
         {
