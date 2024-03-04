@@ -3,9 +3,12 @@ using ProjectCouchPotatoV1.Models;
 using ProjectCouchPotatoV1.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHangfire(configuration => configuration
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
@@ -37,6 +40,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseHangfireServer();
+app.UseHangfireDashboard();
 app.UseFileServer();
 app.MapControllers();
 app.UseHttpsRedirection();
@@ -48,5 +53,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
     endpoints.MapRazorPages();
 });
+
 
 app.Run();

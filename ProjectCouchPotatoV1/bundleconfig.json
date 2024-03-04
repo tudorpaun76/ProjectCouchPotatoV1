@@ -1,0 +1,9 @@
+[
+  {
+    "outputFileName": "wwwroot/styles/Index.min.css",
+    "inputFiles": [
+      "wwwroot/styles/Index.scss"
+    ],
+    "minify": { "enabled": true }
+  }
+]

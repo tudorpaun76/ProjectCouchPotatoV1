@@ -123,5 +123,15 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(movie);
         }
 
+
+        [Route("result")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSearchResult(string name)
+        {
+            var data = await _tmdbService.GetSearchResults(name);
+            return Ok(data);
+        }
+
     }
 }

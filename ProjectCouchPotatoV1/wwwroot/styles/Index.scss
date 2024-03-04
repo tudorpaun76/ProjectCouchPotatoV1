@@ -1,0 +1,91 @@
+﻿/*#636365 light gray (main background color)
+#49484a darker gray (card color)*/
+
+/*
+$base-color: #636365;
+$card-color: #49484a;
+$form-color: #768389;
+$view-color: #ffef00;
+
+*/
+
+body {
+    color: white;
+    background-color: #636365;
+}
+
+.card-body {
+    border-radius: 12px;
+    color: white;
+    background-color: #49484a;
+}
+
+.card {
+    background-color: #49484a;
+}
+
+.list-group-item {
+    background-color: #768389;
+    color: white;
+}
+
+.form-control {
+    background-color: #768389;
+    color: white;
+}
+
+.eyeBtn {
+    background-color: #ffef00;
+}
+
+.scroll {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.scroll::-webkit-scrollbar {
+    visibility: hidden;
+}
+
+.logo {
+    height: 108px;
+    width: 108px;
+}
+
+.poster {
+    height: 215px;
+    width: 145px;
+}
+
+.movie-info {
+    display: flex;
+    align-items: center;
+}
+
+.searchPoster {
+    max-width: 100px; /* Adjust as needed */
+    margin-right: 10px; /* Adjust spacing between image and title */
+}
+
+.movie-title {
+    flex-grow: 1; /* Title takes up remaining space */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Handles long titles */
+    white-space: nowrap; /* Prevents title from wrapping */
+}
+
+.modalContent {
+    background-color: #49484a;
+}
+
+.autoComplete {
+    position: fixed;
+    z-index: 1;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.autoComplete::-webkit-scrollbar {
+    visibility: hidden;
+}
+

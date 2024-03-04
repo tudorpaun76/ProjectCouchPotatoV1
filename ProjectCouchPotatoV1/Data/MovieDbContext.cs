@@ -8,8 +8,9 @@ namespace ProjectCouchPotatoV1.Models
     {
         public MovieDbContext(DbContextOptions<MovieDbContext> options) : base(options)
         {
- 
+
         }
+        public DbSet<MovieData> MoviesList { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Watchlist> Watchlists { get; set; }
 

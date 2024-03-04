@@ -9,147 +9,198 @@
 <script src="/lib/axios.min.js"></script>
 <script src="/lib/bootstrap.bundle.min.js"></script>
 <link href="/lib/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/styles/Index.min.css">
 
-<div id="search" class="container mt-4">
-    <form class="form-inline" method="get" action="/movie/search">
-        <div class="form-group mx-sm-3 mb-2 p-2">
-            <label for="movieName" class="sr-only">Enter movie name below</label>
-            <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Movie Name" required>
-            <button type="submit" class="btn btn-secondary mb-2 mt-2">Search</button>
+
+
+
+<div id="app" class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col-2">
+            <img class="logo" src="images/logo.png">
         </div>
-    </form>
-</div>
-
-<div class="mt-2" id="app">
-
-    @*/////////////////////          REVIEW                ////////////////////////////*@
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">
-                    Your Reviews:
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">
-                        <img src="svg/plus.svg">Add Review
-                    </button>
-                </h3>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Search movie to add a review</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="col-8">
+            @*form*@
+            <form id="movieSearchForm" class="form-inline" method="get" action="/movie/search">
+                <div class="form-group">
+                    @*FIX SEARCHQUERY MODAL THEY SHOULD BE DIFFERENT*@
+                    <input v-model="searchQuery" type="text" class="form-control" name="name" id="movieName" placeholder="Search future adventures..." autocomplete="off" required>
+                    <div class="autoComplete list-group">
+                        <button class="list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
+                            <div class="movie-info">
+                                <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                                <span class="movie-title">{{ movie.title }}</span>
                             </div>
-                            <div class="modal-body">
-                                <form class="form-inline" method="get" action="/movie/review">
-                                    <div class="mb-3">
-                                        <label for="movieName" class="sr-only">Search</label>
-                                        <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Search Movie" required>
-                                        <button type="submit" class="btn btn-primary mb-2 mt-2">Search</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        </button>
                     </div>
                 </div>
-                <div class="row">
-                    <div v-for="movie in movies" :key="movie.id" class="col-md-6">
-                        <div class="card mb-3">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">{{ movie.title }}</li>
-                            </ul>
-                            <div v-if="selectedMovie && selectedMovie.id === movie.id" class="custom-modal">
-                                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header"><strong>Review:</strong></div>
-                                            <div class="modal-body">
-                                                <div class="modal-dialog modal-dialog-scrollable">
-                                                    <p class="text-left">{{ selectedMovie.reviewText }}</p>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="container">
+        @*Functional Cards*@
+        <div class="row mt-2">
+            @*Review*@
+            <div class="col scroll">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">
+                            Reviews
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float: right;">
+                                <img src="svg/plus.svg">
+                            </button>
+                        </h3>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modalContent modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Search movie to add a review</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="reviewSearchForm" class="form-inline" method="get" action="/movie/review">
+                                            <div class="form-group">
+
+                                                @*FIX SEARCHQUERY MODAL THEY SHOULD BE DIFFERENT*@
+                                                <input v-model="searchQuery" type="text" class="form-control" name="name" id="movieName" placeholder="Search future adventures..." autocomplete="off" required>
+                                                <div class="autoComplete list-group">
+                                                    <button class="list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
+                                                        <div class="movie-info">
+                                                            <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                                                            <span class="movie-title">{{ movie.title }}</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn"><img src="svg/pen.svg"></button>
-                                                <button type="button" class="btn" v-on:click="deleteReview(selectedMovie.id)"><img src="svg/trash.svg"></button>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container" v-for="movie in movies" :key="movie.id">
+                            <div class="mb-3">
+                                <div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <img class="poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                                        </div>
+                                        <div class="col align-self-center">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">{{ movie.title }}</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col align-self-center">
+                                            <button type="button" class="eyeBtn btn" v-on:click="openReview(movie)">
+                                                <img src="svg/eye.svg">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div v-if="selectedMovie && selectedMovie.id === movie.id" class="custom-modal">
+                                    <div class="modal fade modal-lg" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modalContent modal-content">
+                                                <div class="modal-header"><strong>Review:</strong></div>
+                                                <div class="modal-body">
+                                                    <div class="modal-dialog modal-dialog-scrollable">
+                                                        <p class="text-left">{{ selectedMovie.reviewText }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn" v-on:click="deleteReview(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <button type="button" class="btn btn-primary mb-2" v-on:click="openReview(movie)">
-                                <img src="svg/eye.svg">
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-
-    @*/////////////////////          Watchlist         ////////////////////////////*@
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-                <h3 class="card-title">
-                    Your Watchlist:
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#watchlistModal" style="float: right;">
-                        <img src="svg/plus.svg">Add Watchlist
-                    </button>
-                </h3>
-                <div class="modal fade" id="watchlistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="watchlistModalLabel">Search movie to add to watchlist</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form class="form-inline" method="get" action="/movie/searchwatchlist">
-                                    <div class="mb-3">
-                                        <label for="movieName" class="sr-only">Search</label>
-                                        <input v-model="movieName" type="text" class="form-control p-2" name="name" id="movieName" placeholder="Search Movie" required>
-                                        <button type="submit" class="btn btn-primary mb-2 mt-2">Search</button>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            @*Watchlist*@
+            <div class="col scroll">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">
+                            Watchlist
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#watchlistModal" style="float: right;">
+                                <img src="svg/plus.svg">
+                            </button>
+                        </h3>
+                        <div class="modal fade" id="watchlistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modalContent modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="watchlistModalLabel">Search movie to add to watchlist</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div v-for="watchlist in watchlists" :key="watchlist.id" class="col-md-6">
-                        <div class="card mb-3">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">{{ watchlist.title }}</li>
-                            </ul>
-                            <div v-if="selectedMovie && selectedMovie.id === watchlist.id" class="custom-modal">
-                                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header"><strong>Watchlist:</strong></div>
-                                            <div class="modal-body">
-                                                <div class="modal-dialog modal-dialog-scrollable">
-                                                    <p class="text-left">{{ selectedMovie.title }}</p>
-                                                    <p class="text-left">{{ selectedMovie.overview }}</p>
+                                    <div class="modal-body">
+                                            <form id="watchlistSearchForm" class="form-inline" method="get" action="/movie/searchwatchlist">
+                                            <div class="form-group">
+                                                @*FIX SEARCHQUERY MODAL THEY SHOULD BE DIFFERENT*@
+                                                <input v-model="searchQuery" type="text" class="form-control" name="name" id="movieName" placeholder="Search future adventures..." autocomplete="off" required>
+                                                <div class="autoComplete list-group">
+                                                    <button class="list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
+                                                        <div class="movie-info">
+                                                            <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                                                            <span class="movie-title">{{ movie.title }}</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn" v-on:click="deleteWatchlist(selectedMovie.id)"><img src="svg/trash.svg"></button>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary mb-2" v-on:click="openWatchlist(watchlist)">
-                                <img src="svg/eye.svg">
-                            </button>
+                            <div class="container" v-for="watchlist in watchlists" :key="watchlist.id">
+                                <div class="mb-3">
+                                    <div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <img class="poster" v-bind:src="'https://image.tmdb.org/t/p/original' + watchlist.poster_path" alt="Movie Poster">
+                                            </div>
+                                            <div class="col align-self-center">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">{{ watchlist.title }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col align-self-center">
+                                                <button type="button" class="eyeBtn btn" v-on:click="openWatchlist(watchlist)">
+                                                    <img src="svg/eye.svg">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-if="selectedMovie && selectedMovie.id === watchlist.id" class="custom-modal">
+                                        <div class="modal fade modal-lg" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modalContent modal-content">
+                                                    <div class="modal-header"><strong>Watchlist:</strong></div>
+                                                    <div class="modal-body">
+                                                        <div class="modal-dialog modal-dialog-scrollable">
+                                                            <p class="text-left">{{ selectedMovie.title }}</p>
+                                                            <p class="text-left">{{ selectedMovie.overview }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn" v-on:click="deleteWatchlist(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -157,7 +208,6 @@
         </div>
     </div>
 </div>
-
 
 
 
@@ -169,10 +219,43 @@
                 watchlists: [],
                 selectedMovie: null,
                 isEditing: false,
-                editedReview: ''
+                searchQuery: '',
+                searchResults: []
             };
         },
+        watch: {
+            searchQuery() {
+                if (this.searchQuery.length > 2) {
+                    this.fetchSearchResults();
+                } else {
+                    this.searchResults = [];
+                }
+            }
+        },
         methods: {
+            fetchSearchResults() {
+                axios.get(`/movie/result?name=${this.searchQuery}`)
+                    .then(response => {
+                        this.searchResults = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                    });
+            },
+            populateSearchField(movieTitle, context) {
+                this.searchQuery = movieTitle;
+                if (context === 'movie') {
+                    document.getElementById('movieSearchForm').submit();
+                } else if (context === 'review') {
+                    document.getElementById('reviewSearchForm').submit();
+                } else if (context === 'searchwatchlist') {
+                    document.getElementById('watchlistSearchForm').submit();
+                }
+                
+                else {
+                    console.error('Invalid context provided.');
+                }
+            },
             fetchMovies() {
                 axios.get('/movie/getmovies')
                     .then(response => {
@@ -185,7 +268,6 @@
             fetchWatchlists() {
                 axios.get('/movie/getwatchlist')
                     .then(response => {
-                        debugger
                         console.log('Watchlist data:', response.data);
                         this.watchlists = response.data;
                     })
@@ -196,7 +278,7 @@
             openReview(movie) {
                 this.selectedMovie = movie;
                 this.$nextTick(() => { // <-- class stuff
-                    $('#reviewModal').modal('show'); 
+                    $('#reviewModal').modal('show');
                 });
             },
             openWatchlist(watchlist) {
@@ -207,14 +289,6 @@
             },
             closeModal() {
                 this.selectedMovie = null;
-            },
-            openEditModal() {
-                this.isEditing = true;
-                this.editedReview = this.selectedMovie.ReviewText;
-            },
-            cancelEdit() {
-                this.isEditing = false;
-                this.editedReview = '';
             },
             deleteReview(id) {
                 axios.delete(`/movie/deletereview?movieid=${id}`)
