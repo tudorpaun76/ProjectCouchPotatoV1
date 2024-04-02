@@ -1,0 +1,40 @@
+﻿@page
+@model RegisterModel
+
+<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/vue3.js"></script>
+<script src="/lib/axios.min.js"></script>
+<script src="/lib/bootstrap.bundle.min.js"></script>
+<link href="/lib/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/styles/Index.min.css">
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+<div class="row justify-content-center">
+    <div class="col-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-2">
+                    <input asp-for="Input.Email" class="form-control" placeholder="Email" aria-required="true" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+                <div class="mb-2">
+                    <input asp-for="Input.Password" class="form-control" placeholder="Password" aria-required="true" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+                <div class="mb-2">
+                    <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirm Password" aria-required="true" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-60 btn btn-lg btn-dark">Register</button>
+        </form>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

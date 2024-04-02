@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ProjectCouchPotatoV1.Areas.Identity.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/vue3.js"></script>
+<script src="/lib/axios.min.js"></script>
+<script src="/lib/bootstrap.bundle.min.js"></script>
+<link href="/lib/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/styles/Index.min.css">
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                <button id="logout" type="submit" class="btn btn-light">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">
+                <button class="btn btn-light">Register</button>  @*It will only redirect when its inside the hyperlink tag ???*@
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">
+                <button class="btn btn-light">Login</button> @*It will only redirect when its inside the hyperlink tag ???*@
+            </a>
+        </li>
+
+    }
+</ul>

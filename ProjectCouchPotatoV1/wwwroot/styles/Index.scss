@@ -2,22 +2,34 @@
 #49484a darker gray (card color)*/
 
 /*
-$base-color: #636365;
+$base-color: #936897;
 $card-color: #49484a;
 $form-color: #768389;
 $view-color: #ffef00;
 
 */
 
-body {
+html, body {
     color: white;
-    background-color: #636365;
+    background-color: #c3653c;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(30deg, #c3653c 50%, #ff5400 50%);
+}
+
+.navbarLog {
+    background-color: #c3653c;
+}
+
+.navbarMain {
+    background-color: #c3653c;
+    color: white;
 }
 
 .card-body {
-    border-radius: 12px;
     color: white;
-    background-color: #49484a;
+    background-color: #6f7890;
 }
 
 .card {
@@ -30,7 +42,7 @@ body {
 }
 
 .form-control {
-    background-color: #768389;
+    background-color: white;
     color: white;
 }
 
@@ -47,9 +59,16 @@ body {
     visibility: hidden;
 }
 
+
+/*IMAGES*/
 .logo {
-    height: 108px;
-    width: 108px;
+    height: 208px;
+    width: 208px;
+}
+
+.arrow {
+    height: 200px;
+    width: 450px;
 }
 
 .poster {
@@ -63,16 +82,15 @@ body {
 }
 
 .searchPoster {
-    max-width: 100px; /* Adjust as needed */
-    margin-right: 10px; /* Adjust spacing between image and title */
+    max-width: 100px; 
+    margin-right: 10px; 
 }
 
 .movie-title {
-    flex-grow: 1; /* Title takes up remaining space */
+    flex-grow: 1;
     overflow: hidden;
-    text-overflow: ellipsis; /* Handles long titles */
-    white-space: nowrap; /* Prevents title from wrapping */
-}
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
 
 .modalContent {
     background-color: #49484a;
@@ -89,3 +107,29 @@ body {
     visibility: hidden;
 }
 
+
+.formsReg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/*FOOTER*/
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.footer-logo{
+    height: 28px;
+    width: 28px;
+}

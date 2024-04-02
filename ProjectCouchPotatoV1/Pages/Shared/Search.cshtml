@@ -16,7 +16,10 @@
             <div class="col">
                 <h1 class="display-4">@Model.Title</h1>
                 <p class="lead">@Model.Overview</p>
-                <button class="btn btn-secondary mt-2" v-on:click="redirectToHome">Return to home</button>
+                <form class="navbar-brand" asp-area="" asp-page="/Index">
+                    <button class="btn btn-secondary mt-2">Return to home</button>
+                </form>
+                
             </div>
         </div>
     </div>
@@ -37,21 +40,6 @@
             };
         },
         methods: {
-            submitForm() {
-                axios.post('/movie/review', this.movie)
-                    .then(response => {
-                        this.movie = response.data;
-                        this.submitSuccess = true;
-                        console.log('Success:', response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            },
-            redirectToHome() {
-                console.log('Button clicked!');
-                window.location.href = 'https://localhost:7226/';
-            }
         }
     });
 

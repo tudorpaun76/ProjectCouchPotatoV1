@@ -13,11 +13,12 @@ namespace ProjectCouchPotatoV1.Search
 {
     public interface ITMDBService
     {
-        Task<Review> GetMovieByName(string name);
+        Task<Review> GetMovieDataReview(string name);
+
+        Task<Watchlist> GetMovieDataWatchlist(string name);
 
         Task<List<AutoCompleteResult>> GetSearchResults(string name);
-
-        Task<Watchlist> GetMovieWatchlist(string name);
+        
     }
 
     public class TMDBService : ITMDBService
@@ -35,7 +36,7 @@ namespace ProjectCouchPotatoV1.Search
             RecurringJob.AddOrUpdate(() => AddScrapedMoviesToDatabase(), Cron.Daily);
         }
 
-        public async Task<Review> GetMovieByName(string name)
+        public async Task<Review> GetMovieDataReview(string name)
         {
             var searchResult = await SearchMovieAsync(name);
 
@@ -53,8 +54,29 @@ namespace ProjectCouchPotatoV1.Search
                 _logger.LogInformation($"No movie found with the name: {name}");
                 return null;
             }
+
+
         }
 
+        public async Task<Watchlist> GetMovieDataWatchlist(string name)
+        {
+            var searchResult = await SearchMovieAsync(name);
+
+            if (searchResult?.Watchlists?.Count > 0)
+            {
+                var movie = searchResult.Watchlists[0];
+                movie.MovieId = movie.Id.ToString();
+
+                _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
+
+                return movie;
+            }
+            else
+            {
+                _logger.LogInformation($"No movie found with the name: {name}");
+                return null;
+            }
+        }
 
         public async Task<List<AutoCompleteResult>> GetSearchResults(string name)
         {
@@ -78,25 +100,6 @@ namespace ProjectCouchPotatoV1.Search
             return movies;
         }
 
-        public async Task<Watchlist> GetMovieWatchlist(string name)
-        {
-            var searchResult = await SearchMovieAsync(name);
-
-            if (searchResult?.Watchlists?.Count > 0)
-            {
-                var movie = searchResult.Watchlists[0];
-                movie.MovieId = movie.Id.ToString();
-
-                _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
-
-                return movie;
-            }
-            else
-            {
-                _logger.LogInformation($"No movie found with the name: {name}");
-                return null;
-            }
-        }
 
         public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
         {
@@ -175,7 +178,6 @@ namespace ProjectCouchPotatoV1.Search
 
                 var json = JObject.Parse(body);
 
-                //this shit makes it save to each obj now
                 searchResult.Results = json["results"].ToObject<List<Review>>();
 
                 searchResult.Watchlists = json["results"].ToObject<List<Watchlist>>();

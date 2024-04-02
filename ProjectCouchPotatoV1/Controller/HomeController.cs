@@ -9,6 +9,9 @@ using ProjectCouchPotatoV1.Search;
 using Microsoft.AspNetCore.Authorization;
 using ProjectCouchPotatoV1.Migrations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using ProjectCouchPotatoV1.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace ProjectCouchPotatoV1.Controllers
 {
@@ -19,19 +22,33 @@ namespace ProjectCouchPotatoV1.Controllers
         private readonly ITMDBService _tmdbService;
         private readonly ILogger<TMDBService> _logger;
         private readonly MovieDbContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ITMDBService tmdbService, MovieDbContext dbContext)
+        public HomeController(ITMDBService tmdbService, MovieDbContext dbContext, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _tmdbService = tmdbService;
             _dbContext = dbContext;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        [Route("review")]
+        [HttpGet]
+        [Route("discover")] 
+        [AllowAnonymous]
+        public IActionResult Discover()
+        {
+            return View();
+        }
+
+        //GET Requests
+
+        [Route("searchreview")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetMovieByName(string name)
+        public async Task<IActionResult> SearchReview(string name)
         {
-            var data = await _tmdbService.GetMovieByName(name);
+            var data = await _tmdbService.GetMovieDataReview(name);
             return View(data);
         }
 
@@ -40,27 +57,17 @@ namespace ProjectCouchPotatoV1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SearchWatchlist(string name)
         {
-            var data = await _tmdbService.GetMovieByName(name);
+            var data = await _tmdbService.GetMovieDataWatchlist(name);
             return View(data);
         }
 
-        [Route("search")]
+        [Route("searchmovie")]
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Search(string name)
         {
-            var data = await _tmdbService.GetMovieByName(name);
+            var data = await _tmdbService.GetMovieDataReview(name);
             return View(data);
-        }
-
-        [HttpPost]
-        [Route("submit")]
-        [AllowAnonymous]
-        public async Task<IActionResult> SaveMovieToDatabase([FromBody] Review review)
-        {
-            _dbContext.Reviews.Add(review);
-            await _dbContext.SaveChangesAsync();
-            return Ok(review);
         }
 
         [HttpGet]
@@ -68,8 +75,42 @@ namespace ProjectCouchPotatoV1.Controllers
         [AllowAnonymous]
         public IActionResult GetMovies()
         {
-            var movie = _dbContext.Reviews.ToList();
-            return Ok(movie);
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var movies = _dbContext.Reviews.Where(r => r.UserId == userId).ToList();
+            return Ok(movies);
+        }
+
+        [HttpGet]
+        [Route("getwatchlist")]
+        [AllowAnonymous]
+        public IActionResult GetWatchlist()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var movies = _dbContext.Watchlists.Where(r => r.UserId == userId).ToList();
+            return Ok(movies);
+        }
+
+        [Route("searchresult")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSearchResult(string name)
+        {
+            var data = await _tmdbService.GetSearchResults(name);
+            return Ok(data);
+        }
+
+        //POST Requests
+
+        [HttpPost]
+        [Route("review")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveReviewToDatabase([FromBody] Review review)
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            review.UserId = userId;
+            _dbContext.Reviews.Add(review);
+            await _dbContext.SaveChangesAsync();
+            return Ok(review);
         }
 
         [HttpPost]
@@ -77,19 +118,14 @@ namespace ProjectCouchPotatoV1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SaveWatchlistToDatabase([FromBody] Watchlist watchlist)
         {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            watchlist.UserId = userId;
             _dbContext.Watchlists.Add(watchlist);
             await _dbContext.SaveChangesAsync();
             return Ok(watchlist);
         }
 
-        [HttpGet]
-        [Route("getwatchlist")]
-        [AllowAnonymous]
-        public IActionResult GetWatchlist ()
-        {
-            var watchlist = _dbContext.Watchlists.ToList();
-            return Ok(watchlist);
-        }
+        //DELETE Requests
 
         [HttpDelete]
         [Route("deletereview")]
@@ -123,15 +159,6 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(movie);
         }
 
-
-        [Route("result")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetSearchResult(string name)
-        {
-            var data = await _tmdbService.GetSearchResults(name);
-            return Ok(data);
-        }
 
     }
 }

@@ -1,4 +1,4 @@
-﻿@model ProjectCouchPotatoV1.Models.Review
+﻿@model ProjectCouchPotatoV1.Models.Watchlist
 
 <script src="/lib/jquery-3.7.1.min.js"></script>
 <script src="/lib/vue3.js"></script>
@@ -18,7 +18,9 @@
                     <h1 class="display-4">@Model.Title</h1>
                     <p class="lead">@Model.Overview</p>
                     <button class="btn btn-secondary mt-2" v-on:click="submitWatchlist">Add to watchlist</button>
-                    <button class="btn btn-secondary mt-2" v-on:click="redirectToHome">Return to home</button>
+                    <form class="navbar-brand" asp-area="" asp-page="/Index">
+                        <button class="btn btn-secondary mt-2">Return to home</button>
+                    </form>
                     <div v-if="showSuccess" class="alert alert-success mt-2" role="alert">
                         Submit successful!
                     </div>
@@ -54,10 +56,6 @@
                         console.error('Error:', error);
                     });
             },
-            redirectToHome() {
-                console.log('Button clicked!');
-                window.location.href = 'https://localhost:7226/';
-            }
         }
     });
 

@@ -1,0 +1,97 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model ProjectCouchPotatoV1.Pages.Shared.DiscoverModel
+@{
+}
+<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/vue3.js"></script>
+<script src="/lib/axios.min.js"></script>
+<script src="/lib/bootstrap.bundle.min.js"></script>
+<link href="/lib/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/styles/Index.min.css">
+
+<div id="app">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p class="display-4">Search for a movie.</p>
+                </div>
+            </div>
+        </div>
+
+        <form id="movieSearchForm" class="form-inline" method="get" action="/movie/searchmovie">
+            <div class="form-group">
+                @*FIX SEARCHQUERY MODAL THEY SHOULD BE DIFFERENT*@
+                <input v-model="searchQuery" type="text" class="form-control" name="name" id="movieName" placeholder="Search future adventures..." autocomplete="off" required>
+                <div class="autoComplete list-group">
+                    <button class="list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
+                        <div class="movie-info">
+                            <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                            <span class="movie-title">{{ movie.title }}</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p class="display-4">More features coming soon...</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p class="display-4">Sign in to use this feature</p>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                searchQuery: '',
+                searchResults: []
+            };
+        },
+        watch: {
+            searchQuery() {
+                if (this.searchQuery.length > 2) {
+                    this.fetchSearchResults();
+                } else {
+                    this.searchResults = [];
+                }
+            }
+        },
+        methods: {
+            fetchSearchResults() {
+                axios.get(`/movie/searchresult?name=${this.searchQuery}`)
+                    .then(response => {
+                        this.searchResults = response.data;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                    });
+            }
+        },
+        mounted() {
+        }
+    });
+
+    app.mount('#app');
+
+</script>

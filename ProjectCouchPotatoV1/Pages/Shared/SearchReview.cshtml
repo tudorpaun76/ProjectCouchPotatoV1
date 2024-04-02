@@ -21,7 +21,9 @@
                     <textarea class="form-control" id="exampleFormControlTextarea1" v-model="movie.ReviewText" rows="3"></textarea>
                     <button class="btn btn-secondary mt-2" v-on:click="submitForm">Submit</button>
                     <div>
-                        <button class="btn btn-secondary mt-2" v-on:click="redirectToHome">Return to home</button>
+                        <form class="navbar-brand" asp-area="" asp-page="/Index">
+                            <button class="btn btn-secondary mt-2">Return to home</button>
+                        </form>
                     </div>
                     <div v-if="submitSuccess" class="alert alert-success mt-2" role="alert">
                         Submit successful!
@@ -50,7 +52,7 @@
         },
         methods: {
             submitForm() {
-                axios.post('/movie/submit', this.movie)
+                axios.post('/movie/review', this.movie)
                     .then(response => {
                         this.movie = response.data;
                         this.submitSuccess = true;
@@ -60,10 +62,6 @@
                         console.error('Error:', error);
                     });
             },
-            redirectToHome() {
-                console.log('Button clicked!');
-                window.location.href = 'https://localhost:7226/';
-            }
         }
     });
 
