@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ProjectCouchPotatoV1.Areas.Identity.Data;
 using System.Security.Claims;
+using Microsoft.Ajax.Utilities;
 
 namespace ProjectCouchPotatoV1.Controllers
 {
@@ -34,7 +35,7 @@ namespace ProjectCouchPotatoV1.Controllers
         }
 
         [HttpGet]
-        [Route("discover")] 
+        [Route("discover")]
         [AllowAnonymous]
         public IActionResult Discover()
         {
@@ -42,6 +43,34 @@ namespace ProjectCouchPotatoV1.Controllers
         }
 
         //GET Requests
+
+        [Route("movierandom")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> RandomMovie()
+        {
+            try
+            {
+                var randomMovieId = await _dbContext.MoviesList
+                    .OrderBy(x => Guid.NewGuid()) 
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                var randomMovie = await _dbContext.MoviesList
+                    .FirstOrDefaultAsync(m => m.Id == randomMovieId);
+
+                if (randomMovie == null)
+                {
+                    return NotFound(); 
+                }
+
+                return Ok(randomMovie);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [Route("searchreview")]
         [HttpGet]
@@ -61,6 +90,16 @@ namespace ProjectCouchPotatoV1.Controllers
             return View(data);
         }
 
+
+        [Route("searchavoid")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchAvoid(string name)
+        {
+            var data = await _tmdbService.GetMovieDataAvoid(name);
+            return View(data);
+        }
+
         [Route("searchmovie")]
         [HttpGet]
         [AllowAnonymous]
@@ -69,6 +108,17 @@ namespace ProjectCouchPotatoV1.Controllers
             var data = await _tmdbService.GetMovieDataReview(name);
             return View(data);
         }
+
+
+        [Route("popularmovies")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> PopularMovies()
+        {
+            var data = await _tmdbService.GetPopularMovies();
+            return Ok(data);
+        }
+
 
         [HttpGet]
         [Route("getmovies")]
@@ -87,6 +137,16 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var movies = _dbContext.Watchlists.Where(r => r.UserId == userId).ToList();
+            return Ok(movies);
+        }
+
+        [HttpGet]
+        [Route("getavoidmovies")]
+        [AllowAnonymous]
+        public IActionResult GetAvoidMovies()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var movies = _dbContext.MovieToAvoid.Where(r => r.UserId == userId).ToList();
             return Ok(movies);
         }
 
@@ -125,6 +185,18 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(watchlist);
         }
 
+        [HttpPost]
+        [Route("avoid")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveMovieAvoidToDatabase([FromBody] MovieAvoid avoid)
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            avoid.UserId = userId;
+            _dbContext.MovieToAvoid.Add(avoid);
+            await _dbContext.SaveChangesAsync();
+            return Ok(avoid);
+        }
+
         //DELETE Requests
 
         [HttpDelete]
@@ -135,7 +207,7 @@ namespace ProjectCouchPotatoV1.Controllers
             var movie = _dbContext.Reviews.Find(movieid);
             if (movie == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             _dbContext.Reviews.Remove(movie);
             _dbContext.SaveChanges();
@@ -154,6 +226,22 @@ namespace ProjectCouchPotatoV1.Controllers
                 return NotFound();
             }
             _dbContext.Watchlists.Remove(movie);
+            _dbContext.SaveChanges();
+
+            return Ok(movie);
+        }
+
+        [HttpDelete]
+        [Route("deleteavoidmovie")]
+        [AllowAnonymous]
+        public IActionResult DeleteAvoid(int movieid)
+        {
+            var movie = _dbContext.MovieToAvoid.Find(movieid);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            _dbContext.MovieToAvoid.Remove(movie);
             _dbContext.SaveChanges();
 
             return Ok(movie);

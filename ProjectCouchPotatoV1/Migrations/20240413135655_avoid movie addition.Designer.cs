@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectCouchPotatoV1.Models;
 
@@ -11,9 +12,11 @@ using ProjectCouchPotatoV1.Models;
 namespace ProjectCouchPotatoV1.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    partial class MovieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240413135655_avoid movie addition")]
+    partial class avoidmovieaddition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -17,13 +17,10 @@
             <a class="navbar-brand" asp-area="" asp-page="/Index">
                 <img class="logo" src="~/images/logo.png" />
             </a>
-            <form id="watchlistSearchForm" class="form-inline" method="get" action="/movie/discover">
-                <div>
-                    <button class="btn btn-light">
-                        Discover
-                    </button>
-                </div>
-            </form>
+            <div class="text-center">
+                <h1>Couch Potato</h1>
+            </div>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -53,13 +50,6 @@
         @RenderBody()
     </main>
 </div>
-
-
-<footer class="border-top text-muted text-center">
-    <div class="container">
-        Tudor Paun - @DateTime.Now.Year - <a href="https://github.com/tudorpaun76/ProjectCouchPotatoV1"><img class="footer-logo"src="~/images/github-mark.png" /></a>
-    </div>
-</footer>
 
 
 

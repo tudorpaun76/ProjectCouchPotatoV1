@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using NuGet.Packaging;
 using ProjectCouchPotatoV1.Migrations;
 using ProjectCouchPotatoV1.Models;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+using dotenv.net;
 
 namespace ProjectCouchPotatoV1.Search
 {
@@ -18,7 +21,11 @@ namespace ProjectCouchPotatoV1.Search
         Task<Watchlist> GetMovieDataWatchlist(string name);
 
         Task<List<AutoCompleteResult>> GetSearchResults(string name);
-        
+
+        Task<List<Popular>> GetPopularMovies();
+
+        Task<MovieAvoid> GetMovieDataAvoid(string name);
+
     }
 
     public class TMDBService : ITMDBService
@@ -32,8 +39,8 @@ namespace ProjectCouchPotatoV1.Search
             _httpClient = httpClient;
             _logger = logger;
             _dbContext = dbContext;
-            RecurringJob.AddOrUpdate(() => ScrapeMoviesFromApi(1), Cron.Daily);
-            RecurringJob.AddOrUpdate(() => AddScrapedMoviesToDatabase(), Cron.Daily);
+            //RecurringJob.AddOrUpdate(() => ScrapeMoviesFromApi(1), Cron.Daily);
+            //RecurringJob.AddOrUpdate(() => AddScrapedMoviesToDatabase(), Cron.Daily);
         }
 
         public async Task<Review> GetMovieDataReview(string name)
@@ -78,6 +85,25 @@ namespace ProjectCouchPotatoV1.Search
             }
         }
 
+        public async Task<MovieAvoid> GetMovieDataAvoid(string name) 
+        {
+            var searchResult = await SearchMovieAsync(name);
+
+            if (searchResult?.MovieToAvoid?.Count > 0)
+            {
+                var movie = searchResult.MovieToAvoid[0];
+                movie.MovieId = movie.Id.ToString();
+
+                _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
+
+                return movie;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<List<AutoCompleteResult>> GetSearchResults(string name)
         {
             var searchResult = await SearchMovieAsync(name);
@@ -101,67 +127,70 @@ namespace ProjectCouchPotatoV1.Search
         }
 
 
-        public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
-        {
-            string apiKey = "77a90b37fb8e26f0b6a321afcc05bb85";
-            List<MovieData> scrapedMovies = new List<MovieData>();
+        //public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
+        //{
+        //    string apiKey = "xxx";
+        //    List<MovieData> scrapedMovies = new List<MovieData>();
 
-            for (int page = 1; page <= pageCount; page++)
-            {
-                string requestUri = $"https://api.themoviedb.org/3/movie/top_rated?api_key={apiKey}&page={page}";
+        //    for (int page = 1; page <= pageCount; page++)
+        //    {
+        //        string requestUri = $"https://api.themoviedb.org/3/movie/top_rated?api_key={apiKey}&page={page}";
 
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var response = await client.GetAsync(requestUri);
-                    response.EnsureSuccessStatusCode();
+        //        using (var client = new HttpClient())
+        //        {
+        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //            var response = await client.GetAsync(requestUri);
+        //            response.EnsureSuccessStatusCode();
 
-                    var body = await response.Content.ReadAsStringAsync();
-                    var json = JObject.Parse(body);
+        //            var body = await response.Content.ReadAsStringAsync();
+        //            var json = JObject.Parse(body);
 
-                    var Movies = json["results"].ToObject<List<MovieData>>();
+        //            var Movies = json["results"].ToObject<List<MovieData>>();
 
-                    scrapedMovies.AddRange(Movies.Select(movie => new MovieData
-                    {
-                        MovieId = movie.Id.ToString(),
-                        Title = movie.Title,
-                        Overview = movie.Overview,
-                        poster_path = movie.poster_path
-                    }));
+        //            scrapedMovies.AddRange(Movies.Select(movie => new MovieData
+        //            {
+        //                MovieId = movie.Id.ToString(),
+        //                Title = movie.Title,
+        //                Overview = movie.Overview,
+        //                poster_path = movie.poster_path
+        //            }));
 
-                }
-            }
-            return scrapedMovies;
-        }
+        //        }
+        //    }
+        //    return scrapedMovies;
+        //}
 
-        public async Task AddScrapedMoviesToDatabase()
-        {
-            try
-            {
-                int pageCount = 10;
-                var topMovies = await ScrapeMoviesFromApi(pageCount);
+        //public async Task AddScrapedMoviesToDatabase()
+        //{
+        //    try
+        //    {
+        //        int pageCount = 10;
+        //        var topMovies = await ScrapeMoviesFromApi(pageCount);
 
-                foreach (var movie in topMovies)
-                {
-                    _dbContext.MoviesList.Add(movie);
-                }
-                await _dbContext.SaveChangesAsync();
+        //        foreach (var movie in topMovies)
+        //        {
+        //            _dbContext.MoviesList.Add(movie);
+        //        }
+        //        await _dbContext.SaveChangesAsync();
 
-                _logger.LogInformation("Top movies scraped and saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error occurred while scraping and saving top movies: {ex.Message}");
-            }
-        }
+        //        _logger.LogInformation("Top movies scraped and saved successfully.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Error occurred while scraping and saving top movies: {ex.Message}");
+        //    }
+        //}
 
 
         private async Task<MovieSearch> SearchMovieAsync(string name)
         {
             using (var client = new HttpClient())
             {
-                string apiKey = "77a90b37fb8e26f0b6a321afcc05bb85";
+                DotEnv.Load();
+                string apiKey = Environment.GetEnvironmentVariable("apiKey");
                 string movieName = Uri.EscapeDataString(name);
+
+                _logger.LogInformation(apiKey);
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
@@ -182,6 +211,8 @@ namespace ProjectCouchPotatoV1.Search
 
                 searchResult.Watchlists = json["results"].ToObject<List<Watchlist>>();
 
+                searchResult.MovieToAvoid = json["results"].ToObject<List<MovieAvoid>>();
+
                 searchResult.autoCompleteResults = json["results"].ToObject<List<AutoCompleteResult>>();
 
                 return searchResult;
@@ -190,5 +221,58 @@ namespace ProjectCouchPotatoV1.Search
             }
         }
 
+        private async Task<MovieSearch> GetPopularMoviesAsync() 
+        {
+
+            using (var client = new HttpClient())
+            {
+                DotEnv.Load();
+                string apiKey = Environment.GetEnvironmentVariable("apiKey");
+                _logger.LogInformation(apiKey);
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+                var requestUri = $"https://api.themoviedb.org/3/movie/popular?api_key={apiKey}";
+
+
+                var response = await client.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                var body = await response.Content.ReadAsStringAsync();
+
+                var searchResult = new MovieSearch();
+
+                var json = JObject.Parse(body);
+
+                searchResult.Popular = json["results"].ToObject<List<Popular>>();
+
+                return searchResult;
+
+            }
+        }
+
+        public async Task<List<Popular>> GetPopularMovies()
+        {
+            var searchResult = await GetPopularMoviesAsync();
+            var popularMovies = new List<Popular>();
+
+            if (searchResult?.Popular?.Count > 0)
+            {
+                foreach (var movie in searchResult.Popular)
+                {
+                    movie.MovieId = movie.Id.ToString();
+                    _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
+                    popularMovies.Add(movie);
+                }
+
+                return popularMovies;
+            }
+            else
+            {
+                _logger.LogInformation($"No movies found");
+                return null;
+            }
+        }
     }
 }

@@ -2,20 +2,75 @@
 #49484a darker gray (card color)*/
 
 /*
-$base-color: #936897;
+$base-color: #c3653c;
 $card-color: #49484a;
 $form-color: #768389;
 $view-color: #ffef00;
 
 */
 
-html, body {
+/*let the BODIES hit the floor*/
+
+body.avoid {
     color: white;
-    background-color: #c3653c;
     padding: 0;
     margin: 0;
     height: 100%;
-    background-image: -webkit-linear-gradient(30deg, #c3653c 50%, #ff5400 50%);
+    background-image: -webkit-linear-gradient(210deg, #c3653c 30%, pink 70%);
+}
+
+body.register {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(170deg, #c3653c 30%, pink 70%);
+}
+
+body.search {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(320deg, #c3653c 30%, pink 70%);
+}
+
+body.discover {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(160deg, #c3653c 30%, red 70%);
+}
+
+body.review {
+    color: white;
+    padding: 0;
+    margin: 0;
+    background-image: -webkit-linear-gradient(110deg, #c3653c 30%, pink 70%);
+}
+
+body.watchlist {
+    color: white;
+    padding: 0;
+    margin: 0;
+    background-image: -webkit-linear-gradient(60deg, #c3653c 30%, pink 70%);
+}
+
+body.index {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(30deg, #c3653c 30%, pink 70%);
+}
+
+body.login {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-image: -webkit-linear-gradient(140deg, #c3653c 30%, pink 70%);
 }
 
 .navbarLog {
@@ -28,21 +83,17 @@ html, body {
 }
 
 .card-body {
-    color: white;
-    background-color: #6f7890;
+    color: black;
+    background-color: white;
+    border-radius: 24px;
 }
 
 .card {
-    background-color: #49484a;
+    border-radius: 24px;
 }
 
 .list-group-item {
     background-color: #768389;
-    color: white;
-}
-
-.form-control {
-    background-color: white;
     color: white;
 }
 
@@ -61,6 +112,11 @@ html, body {
 
 
 /*IMAGES*/
+
+.carosuel {
+    height: 320px;
+    width: 210px;
+}
 .logo {
     height: 208px;
     width: 208px;
@@ -82,18 +138,19 @@ html, body {
 }
 
 .searchPoster {
-    max-width: 100px; 
-    margin-right: 10px; 
+    max-width: 60px;
+    margin-right: 10px;
 }
 
 .movie-title {
     flex-grow: 1;
     overflow: hidden;
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .modalContent {
-    background-color: #49484a;
+    background-color: white;
 }
 
 .autoComplete {
@@ -120,16 +177,24 @@ html, body {
     min-height: 100vh;
 }
 
-/*FOOTER*/
-
-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.search-list {
+    color: black;
+    background-color: white;
 }
 
-.footer-logo{
-    height: 28px;
-    width: 28px;
+.slide-enter-active, .slide-leave-active {
+    transition: transform 0.5s ease;
+}
+
+.slide-enter, .slide-leave-to {
+    transform: translateX(100%);
+}
+
+.nav-item{
+    padding-right: 8px;
+}
+
+.rotate {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
 }

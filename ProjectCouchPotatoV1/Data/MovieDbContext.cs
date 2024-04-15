@@ -14,6 +14,7 @@ namespace ProjectCouchPotatoV1.Models
         public DbSet<MovieData> MoviesList { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Watchlist> Watchlists { get; set; }
+        public DbSet<MovieAvoid> MovieToAvoid { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

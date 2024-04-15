@@ -9,6 +9,10 @@ namespace ProjectCouchPotatoV1.Models
         public List<Watchlist> Watchlists { get; set; } = new List<Watchlist>();
 
         public List<AutoCompleteResult> autoCompleteResults { get; set; } = new List<AutoCompleteResult>();
+
+        public List<Popular> Popular { get; set; } = new List<Popular>();
+
+        public List<MovieAvoid> MovieToAvoid { get; set; } = new List<MovieAvoid>();
     }
 
 }
