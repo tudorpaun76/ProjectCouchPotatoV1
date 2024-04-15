@@ -128,7 +128,7 @@ namespace ProjectCouchPotatoV1.Search
 
         //public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
         //{
-        //    string apiKey = "77a90b37fb8e26f0b6a321afcc05bb85";
+        //    string apiKey = "xxx";
         //    List<MovieData> scrapedMovies = new List<MovieData>();
 
         //    for (int page = 1; page <= pageCount; page++)
