@@ -10,7 +10,6 @@ using ProjectCouchPotatoV1.Migrations;
 using ProjectCouchPotatoV1.Models;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
-using dotenv.net;
 
 namespace ProjectCouchPotatoV1.Search
 {
@@ -85,7 +84,7 @@ namespace ProjectCouchPotatoV1.Search
             }
         }
 
-        public async Task<MovieAvoid> GetMovieDataAvoid(string name) 
+        public async Task<MovieAvoid> GetMovieDataAvoid(string name)
         {
             var searchResult = await SearchMovieAsync(name);
 
@@ -129,7 +128,7 @@ namespace ProjectCouchPotatoV1.Search
 
         //public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
         //{
-        //    string apiKey = "xxx";
+        //    string apiKey = "77a90b37fb8e26f0b6a321afcc05bb85";
         //    List<MovieData> scrapedMovies = new List<MovieData>();
 
         //    for (int page = 1; page <= pageCount; page++)
@@ -186,8 +185,11 @@ namespace ProjectCouchPotatoV1.Search
         {
             using (var client = new HttpClient())
             {
-                DotEnv.Load();
-                string apiKey = Environment.GetEnvironmentVariable("apiKey");
+                IConfiguration config = new ConfigurationBuilder()
+         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+         .Build();
+
+                string apiKey = config.GetSection("API_KEY")["ApiKey"];
                 string movieName = Uri.EscapeDataString(name);
 
                 _logger.LogInformation(apiKey);
@@ -221,13 +223,16 @@ namespace ProjectCouchPotatoV1.Search
             }
         }
 
-        private async Task<MovieSearch> GetPopularMoviesAsync() 
+        private async Task<MovieSearch> GetPopularMoviesAsync()
         {
 
             using (var client = new HttpClient())
             {
-                DotEnv.Load();
-                string apiKey = Environment.GetEnvironmentVariable("apiKey");
+                IConfiguration config = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .Build();
+
+                string apiKey = config.GetSection("API_KEY")["ApiKey"];
                 _logger.LogInformation(apiKey);
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
