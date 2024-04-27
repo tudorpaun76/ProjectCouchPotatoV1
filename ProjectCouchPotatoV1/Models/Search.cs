@@ -12,6 +12,8 @@ namespace ProjectCouchPotatoV1.Models
 
         public List<Popular> Popular { get; set; } = new List<Popular>();
 
+        public List<Upcoming> Upcoming { get; set; } = new List<Upcoming>();
+
         public List<MovieAvoid> MovieToAvoid { get; set; } = new List<MovieAvoid>();
     }
 

@@ -17,20 +17,6 @@ namespace ProjectCouchPotatoV1.Controllers
             _signInManager = signInManager;
         }
 
-        //[HttpGet]
-        //public IActionResult Login(string returnUrl = null)
-        //{
-        //    // Your login page logic
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Login(LoginModel model, string returnUrl = null)
-        //{
-        //    // Your login post logic
-        //    return RedirectToAction("Index", "Home");
-        //}
     }
 }
 

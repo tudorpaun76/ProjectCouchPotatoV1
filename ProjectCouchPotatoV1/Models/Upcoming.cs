@@ -1,6 +1,6 @@
 ﻿namespace ProjectCouchPotatoV1.Models
 {
-    public class PopularMovies
+    public class Upcoming
     {
         public int Id { get; set; }
         public string MovieId { get; set; }

@@ -5,6 +5,8 @@
 @model ProjectCouchPotatoV1.Models.Popular
 @{
 }
+
+<script type="text/javascript" src="/js/Discover.js" defer></script>
 <script src="/lib/jquery-3.7.1.min.js"></script>
 <script src="/lib/vue3.js"></script>
 <script src="/lib/axios.min.js"></script>
@@ -26,10 +28,10 @@
                 </div>
             </div>
 
-            <form id="movieSearchForm" class="form-inline" method="get" action="/movie/searchmovie">
+            <form id="movieSearchForm" class="form-inline" method="get" action="/movie/searchmovie" style="position: relative;">
                 <div class="form-group">
                     <input v-model="searchQuery" type="text" class="form-control" name="name" id="movieName" placeholder="Search future adventures..." autocomplete="off" required>
-                    <div class="autoComplete list-group">
+                    <div class="autoComplete list-group" style="position: absolute; top: 100%; left: 0; z-index: 1000;">
                         <button class="search-list list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
                             <div class="movie-info">
                                 <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
@@ -40,16 +42,19 @@
                 </div>
             </form>
 
-            <div class="container">
+            <div v-if="loaded" class="loader-container">
+                <img class="loader" src="~/images/logo.png">
+            </div>
+
+            <div class="container mt-3" v-if="!loaded">
                 <div class="row">
                     <h1>Popular Movies</h1>
-                    <div id="carouselExampleCaptions" class="carousel slide">
+                    <div id="carouselPopular" class="carousel slide">
                         <div class="carousel-inner">
                             <div v-for="(group, index) in Math.ceil(popular.length / 5)" :key="index" :class="{ 'carousel-item': true, 'active': index === 0 }">
                                 <div class="row">
                                     <div v-for="(movie, movieIndex) in popular.slice(index * 5, (index + 1) * 5)" :key="movie.id" class="col-md">
                                         <div class="h-100">
-                                            @*Might need to change how its redirected*@
                                             <a :href="`/movie/searchmovie?name=${(movie.title)}`">
                                                 <img class="img-fluid" :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" :alt="movie.title">
                                             </a>
@@ -61,19 +66,54 @@
                                 </div>
                             </div>
                         </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselPopular" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselPopular" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
             </div>
 
-            <div class="container">
+            <div class="container mt-3" v-if="!loaded">
+                <div class="row" id="upcomingMovies">
+                    <h1>Upcoming Movies</h1>
+                    <div id="carouselUpcoming" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div v-for="(group, index) in Math.ceil(upcoming.length / 5)" :key="index" :class="{ 'carousel-item': true, 'active': index === 0 }">
+                                <div class="row">
+                                    <div v-for="(movie, movieIndex) in upcoming.slice(index * 5, (index + 1) * 5)" :key="movie.id" class="col-md">
+                                        <div class="h-100">
+                                            <a :href="`/movie/searchmovie?name=${(movie.title)}`">
+                                                <img class="img-fluid" :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" :alt="movie.title">
+                                            </a>
+                                            <div class="d-flex flex-column">
+                                                <h5 class="card-title">{{ movie.title }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselUpcoming" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselUpcoming" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="container mt-3" v-if="!loaded">
                 <div class="row">
                     <div class="col">
                         <p class="display-4">More features coming soon...</p>
@@ -85,100 +125,12 @@
         {
             <div class="container">
                 <div class="row">
-                    <h1>Popular Movies</h1>
-                    <div id="carouselExampleCaptions" class="carousel slide">
-                        <div class="carousel-inner">
-                            <div v-for="(group, index) in Math.ceil(popular.length / 5)" :key="index" :class="{ 'carousel-item': true, 'active': index === 0 }">
-                                <div class="row">
-                                    <div v-for="(movie, movieIndex) in popular.slice(index * 5, (index + 1) * 5)" :key="movie.id" class="col-md">
-                                        <div class="h-100">
-                                            @*Might need to change how its redirected*@
-                                            <a :href="`/movie/searchmovie?name=${(movie.title)}`">
-                                                <img class="img-fluid" :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" :alt="movie.title">
-                                            </a>
-                                            <div class="d-flex flex-column">
-                                                <h5 class="card-title">{{ movie.title }}</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row">
                     <div class="col">
-                        <p class="display-4">More features coming soon...</p>
+                        <p class="display-4">Sign in to see a world of movies!</p>
                     </div>
                 </div>
             </div>
         }
-
     </div>
-
 </body>
 
-<script>
-    const app = Vue.createApp({
-        data() {
-            return {
-                searchQuery: '',
-                searchResults: [],
-                popular: []
-            };
-        },
-        watch: {
-            searchQuery() {
-                if (this.searchQuery.length > 2) {
-                    this.fetchSearchResults();
-                } else {
-                    this.searchResults = [];
-                }
-            }
-        },
-        methods: {
-            searchMovie(title) {
-                this.populateSearchField(title);
-                this.fetchSearchResults();
-            },
-            populateSearchField(title) {
-                this.searchQuery = title;
-            },
-            fetchSearchResults() {
-                axios.get(`/movie/searchresult?name=${this.searchQuery}`)
-                    .then(response => {
-                        this.searchResults = response.data;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching search results:', error);
-                    });
-            },
-            fetchPopularMovies() {
-                axios.get(`/movie/popularmovies`)
-                    .then(response => {
-                        this.popular = response.data;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching search results:', error);
-                    });
-            }
-        },
-        mounted() {
-            this.fetchPopularMovies();
-        }
-    });
-
-    app.mount('#app');
-
-</script>

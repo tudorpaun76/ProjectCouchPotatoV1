@@ -23,6 +23,8 @@ namespace ProjectCouchPotatoV1.Search
 
         Task<List<Popular>> GetPopularMovies();
 
+        Task<List<Upcoming>> GetUpcomingMovies();
+
         Task<MovieAvoid> GetMovieDataAvoid(string name);
 
     }
@@ -186,8 +188,8 @@ namespace ProjectCouchPotatoV1.Search
             using (var client = new HttpClient())
             {
                 IConfiguration config = new ConfigurationBuilder()
-         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-         .Build();
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build();
 
                 string apiKey = config.GetSection("API_KEY")["ApiKey"];
                 string movieName = Uri.EscapeDataString(name);
@@ -197,7 +199,7 @@ namespace ProjectCouchPotatoV1.Search
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
-                var requestUri = $"https://api.themoviedb.org/3/search/movie?api_key={apiKey}&query={movieName}&page=1&include_adult=false";
+                var requestUri = $"https://api.themoviedb.org/3/search/movie?api_key={apiKey}&query={movieName}&page=1&include_adult=false&append_to_response=videos";
 
 
                 var response = await client.GetAsync(requestUri);
@@ -217,11 +219,29 @@ namespace ProjectCouchPotatoV1.Search
 
                 searchResult.autoCompleteResults = json["results"].ToObject<List<AutoCompleteResult>>();
 
+                foreach (var movie in searchResult.Results)
+                {
+                    var movieId = movie.Id;
+                    var trailerRequestUri = $"https://api.themoviedb.org/3/movie/{movieId}/videos?api_key={apiKey}";
+                    var trailerResponse = await client.GetAsync(trailerRequestUri);
+                    trailerResponse.EnsureSuccessStatusCode();
+                    var trailerBody = await trailerResponse.Content.ReadAsStringAsync();
+                    var trailerJson = JObject.Parse(trailerBody);
+                    movie.Trailers = trailerJson["results"].ToObject<List<Trailer>>();
+
+                    var castRequestUri = $"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key={apiKey}";
+                    var castResponse = await client.GetAsync(castRequestUri);
+                    castResponse.EnsureSuccessStatusCode();
+                    var castBody = await castResponse.Content.ReadAsStringAsync();
+                    var castJson = JObject.Parse(castBody);
+                    movie.Cast = castJson["cast"].ToObject<List<Cast>>();
+                }
+
+
                 return searchResult;
-
-
             }
         }
+
 
         private async Task<MovieSearch> GetPopularMoviesAsync()
         {
@@ -229,8 +249,8 @@ namespace ProjectCouchPotatoV1.Search
             using (var client = new HttpClient())
             {
                 IConfiguration config = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        .Build();
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build();
 
                 string apiKey = config.GetSection("API_KEY")["ApiKey"];
                 _logger.LogInformation(apiKey);
@@ -279,5 +299,64 @@ namespace ProjectCouchPotatoV1.Search
                 return null;
             }
         }
+
+        private async Task<MovieSearch> GetUpcomingMoviesAsync()
+        {
+
+            using (var client = new HttpClient())
+            {
+                IConfiguration config = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build();
+
+                string apiKey = config.GetSection("API_KEY")["ApiKey"];
+                _logger.LogInformation(apiKey);
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+                var requestUri = $"https://api.themoviedb.org/3/movie/upcoming?api_key={apiKey}";
+
+
+                var response = await client.GetAsync(requestUri);
+                response.EnsureSuccessStatusCode();
+
+                var body = await response.Content.ReadAsStringAsync();
+
+                var searchResult = new MovieSearch();
+
+                var json = JObject.Parse(body);
+
+                searchResult.Upcoming = json["results"].ToObject<List<Upcoming>>();
+
+                return searchResult;
+
+            }
+        }
+
+        public async Task<List<Upcoming>> GetUpcomingMovies()
+        {
+            var searchResult = await GetUpcomingMoviesAsync();
+            var popularMovies = new List<Upcoming>();
+
+            if (searchResult?.Upcoming?.Count > 0)
+            {
+                foreach (var movie in searchResult.Upcoming)
+                {
+                    movie.MovieId = movie.Id.ToString();
+                    _logger.LogInformation($"Id: {movie.MovieId}, Title: {movie.Title}, Overview: {movie.Overview}, Poster {movie.poster_path}");
+                    popularMovies.Add(movie);
+                }
+
+                return popularMovies;
+            }
+            else
+            {
+                _logger.LogInformation($"No movies found");
+                return null;
+            }
+        }
+
+
     }
 }

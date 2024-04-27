@@ -92,6 +92,11 @@ body.login {
     border-radius: 24px;
 }
 
+.search-content-card {
+    border-radius: 10px;
+    background-color: cornsilk;
+}
+
 .list-group-item {
     background-color: #768389;
     color: white;
@@ -197,4 +202,63 @@ body.login {
 .rotate {
     transform: rotate(90deg);
     transition: transform 0.3s ease;
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loader {
+    height: 144px;
+    width: 177px;
+    animation: fade 2s linear infinite;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.random-title {
+    color: black;
+    text-decoration: none;
+}
+
+.caret-icon {
+    transition: transform 0.3s ease; 
+}
+
+.caret-icon.down {
+    transform: rotate(90deg);
+}
+
+.button-list{
+    padding-right: 32px;
+}
+
+.index-scroll {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.header-logo{
+    height: 48px;
+    width: 48px;
+}
+
+.header-left{
+    display: grid;
 }

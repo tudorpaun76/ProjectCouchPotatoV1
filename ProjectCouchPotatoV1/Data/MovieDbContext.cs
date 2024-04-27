@@ -23,6 +23,12 @@ namespace ProjectCouchPotatoV1.Models
             modelBuilder.Entity<Watchlist>()
                 .Property(r => r.UserId)
                 .IsRequired();
+
+            modelBuilder.Entity<Review>()
+    .Ignore(r => r.Cast);
+
+            modelBuilder.Entity<Review>()
+    .Ignore(r => r.Trailers);
         }
     }
 }

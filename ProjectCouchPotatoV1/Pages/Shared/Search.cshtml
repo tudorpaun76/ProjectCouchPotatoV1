@@ -1,5 +1,6 @@
 ﻿@model ProjectCouchPotatoV1.Models.Review
 
+@*<script type="text/javascript" src="/js/Search.js" defer></script>*@
 <script src="/lib/jquery-3.7.1.min.js"></script>
 <script src="/lib/vue3.js"></script>
 <script src="/lib/axios.min.js"></script>
@@ -8,26 +9,120 @@
 <link rel="stylesheet" href="/styles/Index.min.css">
 
 <body class="search">
+    <div id="app">
+        <div class="container search-content-card card">
+            <div class="row mt-2">
+                <div class="col" align="center">
+                    <ul class="button-list">
+                        <li class="btn btn-outline-secondary" v-on:click="submitAvoid">Add to Avoid</li>
+                        <li class="btn btn-outline-secondary" v-on:click="submitWatchlist">Add to Watchlist</li>
+                        <li type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add a Review</li>
+                    </ul>
+                    <div v-if="showSuccess" class="alert alert-success mt-2" role="alert">
+                        Submit successful!
+                    </div>
+                    <div v-if="dupeMessage" class="alert alert-danger mt-2" role="alert">
+                        This movie already exists!
+                    </div>
+                    <img src="https://image.tmdb.org/t/p/w500/@Model.poster_path" alt="Movie Image" class="img-fluid">
+                </div>
 
-<div id="app">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col">
-                <img src="https://image.tmdb.org/t/p/w500/@Model.poster_path" alt="Movie Image" class="img-fluid">
+
+                <div class="col">
+                    @if (Model.Trailers != null && Model.Trailers.Count > 0)
+                    {
+                        <iframe width='560' height='280' src="https://www.youtube.com/embed/@Model.Trailers[0].key" frameborder="0" allowfullscreen></iframe>
+                    }
+                    else
+                    {
+                        <p>No trailer available.</p>
+                    }
+                    <h1 class="display-4">@Model.Title</h1>
+                    <p class="lead">@Model.Overview</p>
+                    <p><strong>Release Date: <br /></strong> @Model.release_date</p>
+                    <p><strong>Avg Rating:<br /></strong> @Model.vote_average / 10</p>
+                    <p><strong>Total Votes:<br /></strong> @Model.vote_count</p>
+                    <p><strong>Language:<br /></strong> @Model.original_language</p>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add a Review</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="exampleFormControlTextarea1">Review</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" v-model="movie.ReviewText" rows="3" required></textarea>
+                                    <div v-if="showModalSuccess" class="alert alert-success mt-2" role="alert">
+                                        Submit successful!
+                                    </div>
+                                </div>
+                               
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-light" v-on:click="submitForm">Submit Review</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <h1 class="display-4">@Model.Title</h1>
-                <p class="lead">@Model.Overview</p>
-                <form class="navbar-brand" asp-area="" asp-page="/Index">
-                    <button class="btn btn-secondary mt-2">Return to home</button>
-                </form>
-                
+            <br />
+            <div class="row">
+                <div class="col">
+                    @if (Model.Cast != null && Model.Cast.Any())
+                    {
+                        <h1>Top Cast</h1>
+                        <div id="carouselCast" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (var i = 0; i < Math.Ceiling((double)Model.Cast.Count / 5); i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <div class="row justify-content-center">
+                                            @foreach (var castMember in Model.Cast.Skip(i * 5).Take(5))
+                                            {
+                                                @if (!string.IsNullOrEmpty(castMember.profile_path))
+                                                {
+                                                    <div class="col-md-2">
+                                                        <img src="https://image.tmdb.org/t/p/w500/@castMember.profile_path" style="height: 200px; width: auto; border-radius: 20%;" alt="@castMember.name">
+                                                        <p><strong>@castMember.character</strong></p>
+                                                        <p>@castMember.name</p>
+                                                    </div>
+
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-image.png"
+                                                         style="height: 180px; width: 160px;"
+                                                         alt="Image Not Found">
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselCast" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselCast" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No cast information available.</p>
+                    }
+                </div>
             </div>
+            <br />
         </div>
     </div>
-</div>
-
 </body>
+
 <script>
     const app = Vue.createApp({
         data() {
@@ -37,16 +132,107 @@
                     Title: "@Model.Title",
                     Overview: "@Model.Overview",
                     poster_path: "@Model.poster_path",
-                    ReviewText: ""
+                    ReviewText: "",
+                    vote_average: "@Model.vote_average",
+                    vote_count: "@Model.vote_count",
+                    release_date: "@Model.release_date",
+                    original_language: "@Model.original_language",
+                },
+                avoid: {
+                    MovieId: "@Model.MovieId",
+                    Title: "@Model.Title",
+                    Overview: "@Model.Overview",
+                    poster_path: "@Model.poster_path",
+                },
+                watchlist: {
+                    MovieId: "@Model.MovieId",
+                    Title: "@Model.Title",
+                    Overview: "@Model.Overview",
+                    poster_path: "@Model.poster_path",
                 },
                 showSuccess: false,
-
+                showModalSuccess: false,
+                dupeMessage: false
             };
         },
         methods: {
-        }
+            submitForm() {
+                axios.post('/movie/review', this.movie)
+                    .then(response => {
+                        debugger
+                        this.movie = response.data;
+                        this.showModalSuccess = true;
+                        this.hideModalSuccessMessage();
+                        console.log('Success:', response.data);
+                    })
+                    .catch(error => {
+                        if (error.response.status === 409) {
+                            this.dupeMessage = true;
+                            this.hideDupeMessage();
+                        } else {
+                            console.error('Error:', error);
+                            this.errorMessage = "An error occurred while submitting the review.";
+                        }
+                    });
+            },
+            submitAvoid() {
+                axios.post('/movie/avoid', this.avoid)
+                    .then(response => {
+                        this.avoid = response.data;
+                        this.showSuccess = true;
+                        this.hideSuccessMessage();
+                        console.log('Success:', response.data);
+                    })
+                    .catch(error => {
+                        if (error.response.status === 409) {
+                            this.dupeMessage = true;
+                            this.hideDupeMessage();
+                        } else {
+                            console.error('Error:', error);
+                            this.errorMessage = "An error occurred while submitting the review.";
+                        }
+                    });
+            },
+            submitWatchlist() {
+                axios.post('/movie/watchlist', this.watchlist)
+                    .then(response => {
+                        this.watchlist = response.data;
+                        this.showSuccess = true;
+                        this.hideSuccessMessage();
+                        console.log('Success:', response.data);
+                    })
+                    .catch(error => {
+                        if (error.response.status === 409) {
+                            this.dupeMessage = true;
+                            this.hideDupeMessage();
+                        } else {
+                            console.error('Error:', error);
+                            this.errorMessage = "An error occurred while submitting the review.";
+                        }
+                    });
+            },
+            hideSuccessMessage() {
+                setTimeout(() => {
+                    this.showSuccess = false;
+                }, 3000);
+            },
+            hideDupeMessage() {
+                setTimeout(() => {
+                    this.dupeMessage = false;
+                }, 3000);
+            },
+            hideSuccessMessage() {
+                setTimeout(() => {
+                    this.showSuccess = false;
+                }, 3000);
+            },
+            hideModalSuccessMessage() {
+                setTimeout(() => {
+                    this.showModalSuccess = false;
+                }, 3000);
+            },
+        },
     });
 
     app.mount('#app');
-
 </script>

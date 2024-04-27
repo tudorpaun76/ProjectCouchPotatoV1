@@ -119,6 +119,15 @@ namespace ProjectCouchPotatoV1.Controllers
             return Ok(data);
         }
 
+        [Route("upcomingmovies")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpcomingMovies()
+        {
+            var data = await _tmdbService.GetUpcomingMovies();
+            return Ok(data);
+        }
+
 
         [HttpGet]
         [Route("getmovies")]
@@ -168,6 +177,15 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             review.UserId = userId;
+
+            var existingReview = await _dbContext.Reviews
+                .FirstOrDefaultAsync(r => r.MovieId == review.MovieId && r.UserId == userId);
+
+            if (existingReview != null)
+            {
+                return Conflict("A review for this movie by the current user already exists.");
+            }
+
             _dbContext.Reviews.Add(review);
             await _dbContext.SaveChangesAsync();
             return Ok(review);
@@ -180,10 +198,20 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             watchlist.UserId = userId;
+
+            var existingWatchlist = await _dbContext.Watchlists
+                .FirstOrDefaultAsync(w => w.MovieId == watchlist.MovieId && w.UserId == userId);
+
+            if (existingWatchlist != null)
+            {
+                return Conflict("The movie is already in your watchlist.");
+            }
+
             _dbContext.Watchlists.Add(watchlist);
             await _dbContext.SaveChangesAsync();
             return Ok(watchlist);
         }
+
 
         [HttpPost]
         [Route("avoid")]
@@ -192,10 +220,41 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             avoid.UserId = userId;
+
+            var existingAvoid = await _dbContext.MovieToAvoid
+                .FirstOrDefaultAsync(a => a.MovieId == avoid.MovieId && a.UserId == userId);
+
+            if (existingAvoid != null)
+            {
+                return Conflict("The movie is already marked to avoid.");
+            }
+
             _dbContext.MovieToAvoid.Add(avoid);
             await _dbContext.SaveChangesAsync();
             return Ok(avoid);
         }
+
+
+        [HttpPut]
+        [Route("editreview")]
+        public async Task<IActionResult> EditReview([FromBody] Review updatedReview, int movieId)
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var existingReview = await _dbContext.Reviews.FirstOrDefaultAsync(r => r.UserId == userId && r.Id == movieId);
+
+            if (existingReview == null)
+            {
+                return NotFound("Review not found.");
+            }
+
+            existingReview.ReviewText = updatedReview.ReviewText;
+
+            _dbContext.Reviews.Update(existingReview);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(existingReview);
+        }
+
 
         //DELETE Requests
 
@@ -232,7 +291,7 @@ namespace ProjectCouchPotatoV1.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteavoidmovie")]
+        [Route("deleteavoid")]
         [AllowAnonymous]
         public IActionResult DeleteAvoid(int movieid)
         {

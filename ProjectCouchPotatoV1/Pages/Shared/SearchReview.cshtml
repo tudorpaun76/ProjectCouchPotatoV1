@@ -48,7 +48,11 @@
                     Title: "@Model.Title",
                     Overview: "@Model.Overview",
                     poster_path: "@Model.poster_path",
-                    ReviewText: ""
+                    ReviewText: "",
+                    vote_average: "@Model.vote_average",
+                    vote_count: "@Model.vote_count",
+                    release_date: "@Model.release_date",
+                    original_language: "@Model.original_language",
                 },
                 showSuccess: false,
 
@@ -63,7 +67,12 @@
                         console.log('Success:', response.data);
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        if (error.response.status === 409) {
+                            this.errorMessage = "A review for this movie by you already exists.";
+                        } else {
+                            console.error('Error:', error);
+                            this.errorMessage = "An error occurred while submitting the review.";
+                        }
                     });
             },
         }

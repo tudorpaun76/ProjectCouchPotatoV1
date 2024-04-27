@@ -8,5 +8,9 @@
         public string Overview { get; set; }
         public string poster_path { get; set; }
 
+        public string vote_average { get; set; }
+
+        public string release_date { get; set; }
+
     }
 }
