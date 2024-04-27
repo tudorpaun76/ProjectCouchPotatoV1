@@ -35,12 +35,14 @@
                         <div class="mb-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h3 class="card-title text-center">
-                                        <a type="button" style="float: left;" data-toggle="collapse" data-target="#collapseReview" aria-expanded="false" aria-controls="collapseReview" class="caret-toggle">
-                                            <img src="~/svg/caret.svg" class="caret-icon">
-                                        </a>
-                                        Reviews
-                                    </h3>
+                                    <div class="card-title text-center" data-toggle="collapse" data-target="#collapseReview" aria-expanded="false" aria-controls="collapseReview">
+                                        <h3>
+                                            <a type="button" style="float: left;" class="caret-toggle">
+                                                <img src="~/svg/caret.svg" class="caret-icon">
+                                            </a>
+                                            Reviews
+                                        </h3>
+                                    </div>
                                     <div class="collapse" id="collapseReview">
                                         <div class="index-scroll">
                                             <div class="container" v-for="movie in movies" :key="movie.id">
@@ -67,7 +69,7 @@
                                                                 <div class="modal-header">
                                                                     <img class="poster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
                                                                     <div class="container"><p>{{ selectedMovie.overview }}</p></div>
-                                                                   
+
                                                                 </div>
                                                                 <textarea class="text-area" id="editTextArea" v-model="selectedMovie.reviewText"></textarea>
                                                                 <div class="modal-footer">
@@ -88,12 +90,14 @@
                         <div>
                             <div class="card">
                                 <div class="card-body">
-                                    <h3 class="card-title text-center">
-                                        <a type="button" style="float: left;" data-toggle="collapse" data-target="#collapseWatchlist" aria-expanded="false" aria-controls="collapseWatchlist" class="caret-toggle">
-                                            <img src="~/svg/caret.svg" class="caret-icon">
-                                        </a>
-                                        Watchlist
-                                    </h3>
+                                    <div class="card-title text-center" data-toggle="collapse" data-target="#collapseWatchlist" aria-expanded="false" aria-controls="collapseWatchlist" class="caret-toggle">
+                                        <h3>
+                                            <a type="button" style="float: left;">
+                                                <img src="~/svg/caret.svg" class="caret-icon">
+                                            </a>
+                                            Watchlist
+                                        </h3>
+                                    </div>
                                     <div class="collapse" id="collapseWatchlist">
                                         <div class="index-scroll">
                                             <div class="container" v-for="watchlist in watchlists" :key="watchlist.id">
@@ -141,12 +145,14 @@
                         <div class="mb-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h3 class="card-title text-center">
-                                        <a type="button" style="float: left;" data-toggle="collapse" data-target="#collapseAvoid" aria-expanded="false" aria-controls="collapseAvoid" class="caret-toggle">
-                                            <img src="~/svg/caret.svg" class="caret-icon">
-                                        </a>
-                                        Movies To Avoid
-                                    </h3>
+                                    <div class="card-title text-center" data-toggle="collapse" data-target="#collapseAvoid" aria-expanded="false" aria-controls="collapseAvoid">
+                                        <h3>
+                                            <a type="button" style="float: left;" class="caret-toggle">
+                                                <img src="~/svg/caret.svg" class="caret-icon">
+                                            </a>
+                                            Movies To Avoid
+                                        </h3>
+                                    </div>
                                     <div class="collapse" id="collapseAvoid">
                                         <div class="index-scroll">
                                             <div class="container" v-for="avoid in avoids" :key="avoid.id">
@@ -192,12 +198,14 @@
                         <div>
                             <div class="card">
                                 <div class="card-body">
-                                    <h3 class="card-title text-center">
-                                        <a type="button" style="float: left;" data-toggle="collapse" data-target="#collapseRandom" aria-expanded="false" aria-controls="collapseRandom" class="caret-toggle">
-                                            <img src="~/svg/caret.svg" class="caret-icon">
-                                        </a>
-                                        Random Movie!
-                                    </h3>
+                                    <div class="card-title text-center" data-toggle="collapse" data-target="#collapseRandom" aria-expanded="false" aria-controls="collapseRandom">
+                                        <h3>
+                                            <a type="button" style="float: left;" class="caret-toggle">
+                                                <img src="~/svg/caret.svg" class="caret-icon">
+                                            </a>
+                                            Random Movie!
+                                        </h3>
+                                    </div>
                                     <div class="collapse" id="collapseRandom">
                                         <div class="container">
                                             <div class="row">

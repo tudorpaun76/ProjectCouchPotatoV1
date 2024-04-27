@@ -11,33 +11,59 @@
 
 <body class="login">
 
-<h1>@ViewData["Title"]</h1>
+    <h1>@ViewData["Title"]</h1>
 
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-4">
-            <section>
-                <form id="account" method="post">
-                    <h2>Log into Couch Potato!</h2>
-                    <hr />
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="mb-2">
-                        <input asp-for="Input.Email" placeholder="Email" class="form-control" aria-required="true" />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-                    <div class="mb-2">
-                        <input asp-for="Input.Password" placeholder="Password" class="form-control" aria-required="true" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    <div class="mb-2">
-                        <button id="login-submit" type="submit" class="w-60 btn btn-lg btn-dark">Log in</button>
-                    </div>
-                </form>
-            </section>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <section>
+                    <form id="account" method="post">
+                        <h2>Log into Couch Potato!</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="mb-2"> 
+                            <input asp-for="Input.Email" id="email" placeholder="Email" class="form-control" aria-required="true" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <input asp-for="Input.Password" id="password"placeholder=" Password" class="form-control" aria-required="true" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        @*DELETE THIS AND THE id="email" &&& id="password" ABOVE!!!*@
+
+                        <div class="mb-2">
+                            <input type="checkbox" id="autoFillCheckbox" onchange="autoFillCredentials()" />
+                            <label for="autoFillCheckbox">Auto Fill</label>
+                        </div>
+
+                        <script>
+                            function autoFillCredentials() {
+                                var emailField = document.getElementById('email');
+                                var passwordField = document.getElementById('password');
+                                var checkbox = document.getElementById('autoFillCheckbox');
+
+                                if (checkbox.checked) {
+                                    emailField.value = 'account1@test.com';
+                                    passwordField.value = 'Testing123!';
+                                } else {
+                                    emailField.value = '';
+                                    passwordField.value = '';
+                                }
+                            }
+                        </script>
+
+                        @*DELETE THIS AND THE id="email" &&& id="password" ABOVE!!!*@
+
+                        <div class="mb-2">
+                            <button id="login-submit" type="submit" class="w-60 btn btn-lg btn-dark">Log in</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
 
