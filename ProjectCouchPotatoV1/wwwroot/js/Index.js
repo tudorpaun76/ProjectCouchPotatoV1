@@ -104,13 +104,13 @@
         openWatchlist(watchlist) {
             this.selectedMovie = watchlist;
             this.$nextTick(() => {
-                $('#reviewModal').modal('show');
+                $('#watchlistModal').modal('show');
             });
         },
         openAvoid(avoid) {
             this.selectedMovie = avoid;
             this.$nextTick(() => {
-                $('#reviewModal').modal('show');
+                $('#avoidModal').modal('show');
             });
         },
         closeModal() {
@@ -134,7 +134,7 @@
                     console.log('Deleted movie:', response.data);
                     this.watchlists = this.watchlists.filter(watchlist => watchlist.id !== id);
                     this.closeModal();
-                    $('#reviewModal').modal('hide');
+                    $('#watchlistModal').modal('hide');
                 })
                 .catch(error => {
                     console.error('Error deleting movie:', error);
@@ -146,7 +146,7 @@
                     console.log('Deleted movie:', response.data);
                     this.avoids = this.avoids.filter(avoid => avoid.id !== id);
                     this.closeModal();
-                    $('#reviewModal').modal('hide');
+                    $('#avoidModal').modal('hide');
                 })
                 .catch(error => {
                     console.error('Error deleting movie:', error);
@@ -171,8 +171,10 @@
         this.fetchAvoid();
         jQuery(document).ready(function ($) {
             $('#reviewModal').modal({ show: true });
+            $('#watchlistModal').modal({ show: true });
+            $('#avoidModal').modal({ show: true });
         });
-        
+
     }
 });
 
