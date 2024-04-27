@@ -15,6 +15,9 @@
 
     <nav class="navbar navbar-expand-lg navbar-toggleable-lg">
         <div class="header-left">
+            <a class="text-center" asp-area="" asp-page="/Index">
+                <img class="header-logo" src="~/svg/home.svg" />
+            </a>
             <a class="text-center" href="https://github.com/tudorpaun76/ProjectCouchPotatoV1" target=”_blank”>
                 <img class="header-logo" src="~/svg/github.svg" />
             </a>
@@ -34,7 +37,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-
                 @{
                     var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
                 }

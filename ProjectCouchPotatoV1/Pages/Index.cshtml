@@ -69,12 +69,11 @@
                                                                     <div class="container"><p>{{ selectedMovie.overview }}</p></div>
                                                                    
                                                                 </div>
-                                                                <textarea class="form-control" id="editTextArea" v-model="selectedMovie.reviewText"></textarea>
-                                                            
+                                                                <textarea class="text-area" id="editTextArea" v-model="selectedMovie.reviewText"></textarea>
                                                                 <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-primary" v-on:click="editReview(selectedMovie.id)">Save Changes</button>
-                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="closeModal()">Close</button>
+                                                                    <button type="button" class="btn" v-on:click="editReview(selectedMovie.id)"><img src="svg/save.svg"></button>
                                                                     <button type="button" class="btn" v-on:click="deleteReview(selectedMovie.id)"><img src="svg/trash.svg"></button>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" v-on:click="closeModal()" aria-label="Close"></button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -242,35 +241,6 @@
 
             </div>
         }
-
-
-
-        @*    <style>
-        html, body {
-        height: 100%;
-        }
-
-        .wrapper {
-        min-height: 100%;
-        margin-bottom: -100px;
-        }
-
-        .footer {
-        background-color: #343a40;
-        color: #fff;
-        padding: 20px 0;
-        width: 100%;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        }
-        </style>
-
-        <footer class="footer">
-        <div class="container text-center">
-        <span class="text-muted">Your Footer Content Here</span>
-        </div>
-        </footer>*@
 
     </div>
 </body>

@@ -33,7 +33,6 @@
                 });
         },
         populateSearchField(movieTitle, context) {
-            debugger
             this.searchQuery = movieTitle;
             if (context === 'movie') {
                 document.getElementById('movieSearchForm').submit();
@@ -156,7 +155,6 @@
         editReview(id) {
             axios.put(`/movie/editreview?movieId=${id}`, { reviewText: this.selectedMovie.reviewText })
                 .then(response => {
-                    debugger
                     console.log('Updated review:', response.data);
                     this.selectedMovie.reviewText = response.data.reviewText;
                     this.closeModal();
