@@ -127,7 +127,6 @@ namespace ProjectCouchPotatoV1.Search
             return movies;
         }
 
-
         //public async Task<List<MovieData>> ScrapeMoviesFromApi(int pageCount)
         //{
         //    string apiKey = "xxx";
@@ -182,7 +181,6 @@ namespace ProjectCouchPotatoV1.Search
         //    }
         //}
 
-
         private async Task<MovieSearch> SearchMovieAsync(string name)
         {
             using (var client = new HttpClient())
@@ -219,6 +217,14 @@ namespace ProjectCouchPotatoV1.Search
 
                 searchResult.autoCompleteResults = json["results"].ToObject<List<AutoCompleteResult>>();
 
+                searchResult.autoCompleteResults = searchResult.autoCompleteResults.Take(5).ToList();
+
+                searchResult.Results = searchResult.Results.Take(1).ToList();
+
+                searchResult.Watchlists = searchResult.Watchlists.Take(1).ToList();
+
+                searchResult.MovieToAvoid = searchResult.MovieToAvoid.Take(1).ToList();
+
                 foreach (var movie in searchResult.Results)
                 {
                     var movieId = movie.Id;
@@ -242,6 +248,8 @@ namespace ProjectCouchPotatoV1.Search
             }
         }
 
+
+        //GET POPULAR MOVIES
 
         private async Task<MovieSearch> GetPopularMoviesAsync()
         {
@@ -299,6 +307,9 @@ namespace ProjectCouchPotatoV1.Search
                 return null;
             }
         }
+
+
+        //GET UPCOMING MOVIES
 
         private async Task<MovieSearch> GetUpcomingMoviesAsync()
         {

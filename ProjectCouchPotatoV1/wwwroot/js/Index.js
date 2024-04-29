@@ -173,6 +173,24 @@
             $('#reviewModal').modal({ show: true });
             $('#watchlistModal').modal({ show: true });
             $('#avoidModal').modal({ show: true });
+            $(".collapse").on("hidden.bs.collapse", function () {
+                localStorage.setItem("coll_" + this.id, "false");
+                $(this).prev().find('.caret-icon').removeClass('down');
+            });
+            $(".collapse").on("shown.bs.collapse", function () {
+                localStorage.setItem("coll_" + this.id, "true");
+                $(this).prev().find('.caret-icon').addClass('down');
+            });
+            $(".collapse").each(function () {
+                var collapseState = localStorage.getItem("coll_" + this.id);
+                if (collapseState === "true") {
+                    $(this).collapse("show");
+                    $(this).prev().find('.caret-icon').addClass('down');
+                }
+            });
+            $('.caret-toggle').click(function () {
+                $(this).find('.caret-icon').toggleClass('down', $(this).attr('aria-expanded') === 'false');
+            });
         });
 
     }

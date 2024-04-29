@@ -15,9 +15,7 @@
 <link href="/lib/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/styles/Index.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 <body class="index">
@@ -253,29 +251,3 @@
 </body>
 
 
-<script>
-    $(document).ready(function () {
-        $(".collapse").on("hidden.bs.collapse", function () {
-            localStorage.setItem("coll_" + this.id, "false");
-            $(this).prev().find('.caret-icon').removeClass('down');
-        });
-
-        $(".collapse").on("shown.bs.collapse", function () {
-            localStorage.setItem("coll_" + this.id, "true");
-            $(this).prev().find('.caret-icon').addClass('down');
-        });
-
-        $(".collapse").each(function () {
-            var collapseState = localStorage.getItem("coll_" + this.id);
-            if (collapseState === "true") {
-                $(this).collapse("show");
-                $(this).prev().find('.caret-icon').addClass('down');
-            }
-        });
-
-        $('.caret-toggle').click(function () {
-            $(this).find('.caret-icon').toggleClass('down', $(this).attr('aria-expanded') === 'false');
-        });
-    });
-
-</script>

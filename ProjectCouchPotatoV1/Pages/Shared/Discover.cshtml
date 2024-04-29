@@ -15,7 +15,6 @@
 <link rel="stylesheet" href="/styles/Index.min.css">
 
 <body class="discover">
-
     <div id="app">
 
         @if (SignInManager.IsSignedIn(User))
@@ -34,8 +33,13 @@
                     <div class="autoComplete list-group" style="position: absolute; top: 100%; left: 0; z-index: 1000;">
                         <button class="search-list list-group-item" v-for="movie in searchResults" :key="movie.id" v-on:click="populateSearchField(movie.title)">
                             <div class="movie-info">
-                                <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
-                                <span class="movie-title">{{ movie.title }}</span>
+                                <div v-if="loaded" class="loader-container">
+                                    <img class="loader" src="~/images/logo.png">
+                                </div>
+                                <div v-if="!loaded">
+                                    <img class="searchPoster" v-bind:src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="Movie Poster">
+                                    <span class="movie-title">{{ movie.title }}</span>
+                                </div>
                             </div>
                         </button>
                     </div>
@@ -109,10 +113,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
             <div class="container mt-3" v-if="!loaded">
                 <div class="row">
                     <div class="col">
