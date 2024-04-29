@@ -60,7 +60,13 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <div><strong>Review of {{ selectedMovie.title }} </strong></div>
+                                                                    <div class="title-link">
+                                                                        <strong>Review of&nbsp;</strong>
+                                                                        <a :href="`/movie/searchmovie?name=${(selectedMovie.title)}`">
+                                                                            <strong style="color: black;">{{ selectedMovie.title }} </strong>
+                                                                            <img src="~/svg/link.svg" class="link-svg">
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modalContent modal-content">
@@ -115,7 +121,12 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <strong>{{ selectedMovie.title }}</strong>
+                                                                    <div class="title-link">
+                                                                        <a :href="`/movie/searchmovie?name=${(selectedMovie.title)}`">
+                                                                            <strong style="color: black;">{{ selectedMovie.title }} </strong>
+                                                                            <img src="~/svg/link.svg" class="link-svg">
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modalContent modal-content">
@@ -170,7 +181,12 @@
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <strong>{{ selectedMovie.title }}</strong>
+                                                                    <div class="title-link">
+                                                                        <a :href="`/movie/searchmovie?name=${(selectedMovie.title)}`">
+                                                                            <strong style="color: black;">{{ selectedMovie.title }} </strong>
+                                                                            <img src="~/svg/link.svg" class="link-svg">
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modalContent modal-content">

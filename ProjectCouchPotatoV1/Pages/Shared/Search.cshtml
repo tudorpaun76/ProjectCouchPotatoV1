@@ -57,7 +57,7 @@
                                         Submit successful!
                                     </div>
                                 </div>
-                               
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-light" v-on:click="submitForm">Submit Review</button>
@@ -84,7 +84,9 @@
                                                 @if (!string.IsNullOrEmpty(castMember.profile_path))
                                                 {
                                                     <div class="col-md-2">
-                                                        <img src="https://image.tmdb.org/t/p/w500/@castMember.profile_path" style="height: 200px; width: auto; border-radius: 20%;" alt="@castMember.name">
+                                                        <a href="https://www.google.com/search?q=@castMember.name" target="_blank">
+                                                            <img src="https://image.tmdb.org/t/p/w500/@castMember.profile_path" style="height: 200px; width: auto; border-radius: 20%;" alt="@castMember.name">
+                                                        </a>
                                                         <p><strong>@castMember.character</strong></p>
                                                         <p>@castMember.name</p>
                                                     </div>
