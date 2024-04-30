@@ -244,22 +244,22 @@
                         </div>
                     </div>
                 </div>
+                <div style="position: absolute; left: 0; bottom: 0; padding-left: 16px;">
+                    <p id="manage" @*asp-area="Identity" asp-page="/Account/Manage/Index"*@ title="Manage">Logged in as @UserManager.GetUserName(User)</p>
+                </div>
             </div>
 
         }
         else
         {
             <div class="container">
-
                 <div class="row">
-
                     <div class="col">
                         <p class="display-4">Welcome to Couch Potato! Your new movie diary.</p>
                         <p class="display-4">Search for movies.</p>
                         <p class="display-4"> Create watchlists, reviews and much more.</p>
                     </div>
                 </div>
-
             </div>
         }
 

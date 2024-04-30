@@ -1,0 +1,66 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@model ProjectCouchPotatoV1.Pages.IndexModel
+
+
+<script src="/lib/jquery-3.7.1.min.js"></script>
+<script src="/lib/vue3.js"></script>
+<script src="/lib/axios.min.js"></script>
+<script type="text/javascript" src="/js/Index.js" defer></script>
+<script src="/lib/bootstrap.bundle.min.js"></script>
+<link href="/lib/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/styles/Index.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<body class="information">
+
+    <div id="app">
+        <div class="container">
+            <h1 class="mb-2">!--WIP--!</h1>
+            <div class="row">
+                <div class="col">
+                    <h1>.NET Framework</h1>
+                    <p class="fs-4">Whats is the .NET framework? The .NET framework is an incredibly versatile platform for developing applications.</p>
+                    <img src="~/svg/net-logo.svg" />
+                </div>
+                <div class="col">
+                    <h1>TMDB API</h1>
+                    <p class="fs-4">The TMDB is a great API I used to retrieve the data for this project. Using the API allowed me to manipulate the data around the application.</p>
+                    <img class="tmdb-info" src="~/svg/tmdb.svg" />
+                </div>
+                <div class="col">
+                    <h1>Model, View, Controller</h1>
+                    <p class="fs-4">For the backend, I used MVC, which is a software design pattern I used for relating the underlying data to the user interface. The model will store the data logic in which the controller will decide where and how this data is displayed, the view will represent the model.</p>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h1>Bootstrap, SCSS</h1>
+                    <p class="fs-4">For the front-end of the application I used bootstrap which is an open-source CSS framework. Bootstrap also uses SASS (scripting language that compiles CSS) which I used to style HTML components.</p>
+                    <img class="tmdb-info" src="~/svg/bootstrap.svg" />
+                </div>
+                <div class="col">
+                    <h1>Database and Deployment</h1>
+                    <p class="fs-4">I used a SQL database to store information securely. I utilized SQL server management studio (SSMS) to view or modify tables. When deploying to a live cloud server. I used Microsoft Azure with a PostgreSQL database for it's security and optimisation.</p>
+                    <img src="~/svg/azure.svg" />
+                </div>
+
+                <div class="col">
+                    <h1>Routing via Axios</h1>
+                    <p class="fs-4">TBD</p>
+                </div>
+            </div>
+        </div>
+@*        <div class="row">
+            <div class="col">
+                <h1 class="fs-4">Optimisation. Methodolgies. Functions</h1>
+                <p class="fs-4">TBD</p>
+            </div>
+        </div>*@
+    </div>
+</body>
+
+

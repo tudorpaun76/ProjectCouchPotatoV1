@@ -61,7 +61,6 @@ body.index {
     color: white;
     padding: 0;
     margin: 0;
-    height: 100%;
     background-image: -webkit-linear-gradient(30deg, #c3653c 30%, pink 70%);
 }
 
@@ -71,6 +70,13 @@ body.login {
     margin: 0;
     height: 100%;
     background-image: -webkit-linear-gradient(140deg, #c3653c 30%, pink 70%);
+}
+
+body.information {
+    color: white;
+    padding: 0;
+    margin: 0;
+    background-image: -webkit-linear-gradient(280deg, #c3653c 30%, pink 70%);
 }
 
 .navbarLog {
@@ -277,4 +283,9 @@ body.login {
 .link-svg {
     margin-left: 12px;
     margin-bottom: 8px;
+}
+
+.tmdb-info {
+    height: 64px;
+    width: 64px;
 }

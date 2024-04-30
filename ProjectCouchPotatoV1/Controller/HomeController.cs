@@ -42,6 +42,14 @@ namespace ProjectCouchPotatoV1.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("information")]
+        [AllowAnonymous]
+        public IActionResult Information()
+        {
+            return View();
+        }
+
         //GET Requests
 
         [Route("movierandom")]
