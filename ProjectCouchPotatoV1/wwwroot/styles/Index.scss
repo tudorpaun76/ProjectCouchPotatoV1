@@ -79,6 +79,14 @@ body.information {
     background-image: -webkit-linear-gradient(280deg, #c3653c 30%, pink 70%);
 }
 
+body.error {
+    color: white;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background-color: red;
+}
+
 .navbarLog {
     background-color: #c3653c;
 }
@@ -128,6 +136,7 @@ body.information {
     height: 320px;
     width: 210px;
 }
+
 .logo {
     height: 208px;
     width: 208px;
@@ -201,7 +210,7 @@ body.information {
     transform: translateX(100%);
 }
 
-.nav-item{
+.nav-item {
     padding-right: 8px;
 }
 
@@ -244,14 +253,14 @@ body.information {
 }
 
 .caret-icon {
-    transition: transform 0.2s ease; 
+    transition: transform 0.2s ease;
 }
 
 .caret-icon.down {
     transform: rotate(90deg);
 }
 
-.button-list{
+.button-list {
     padding-right: 32px;
 }
 
@@ -260,12 +269,12 @@ body.information {
     overflow-y: auto;
 }
 
-.header-logo{
+.header-logo {
     height: 48px;
     width: 48px;
 }
 
-.header-left{
+.header-left {
     display: grid;
     padding-left: 16px;
     margin-bottom: 2px;
@@ -288,4 +297,40 @@ body.information {
 .tmdb-info {
     height: 64px;
     width: 64px;
+}
+
+.tmdb-info-big {
+    height: 512px;
+    width: 512px;
+}
+
+.axios-info {
+    height: 28px;
+    width: 180px;
+}
+
+.function-img {
+    height: 99px;
+    width: 542px;
+}
+
+.buttons-img {
+    height: 84px;
+    width: 442px;
+}
+
+.mvc-img {
+    height: 318px;
+    width: 556px;
+}
+
+.search-img {
+    height: 126px;
+    width: 418px;
+}
+
+.search-btn-img {
+    height: 126px;
+    width: 418px;
+    float: right;
 }

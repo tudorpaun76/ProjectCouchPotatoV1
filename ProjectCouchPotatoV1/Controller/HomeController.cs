@@ -50,6 +50,14 @@ namespace ProjectCouchPotatoV1.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("error")]
+        [AllowAnonymous]
+        public IActionResult error()
+        {
+            return View();
+        }
+
         //GET Requests
 
         [Route("movierandom")]
@@ -114,6 +122,12 @@ namespace ProjectCouchPotatoV1.Controllers
         public async Task<IActionResult> Search(string name)
         {
             var data = await _tmdbService.GetMovieDataReview(name);
+
+            if (data == null)
+            {
+                return RedirectToAction("error");
+            }
+
             return View(data);
         }
 

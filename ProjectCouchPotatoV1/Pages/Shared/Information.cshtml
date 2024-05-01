@@ -18,48 +18,84 @@
 
     <div id="app">
         <div class="container">
-            <h1 class="mb-2">!--WIP--!</h1>
+            <div class="row mb-2">
+                <div class="col">
+                    <h1>Getting started.</h1>
+                    <p class="fs-4">Welcome to the Couch Potato application! This application is your go-to movie diary to keep track of movies you have watched and discover new adventures!</p>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
-                    <h1>.NET Framework</h1>
+                    <h1>Main Page</h1>
+                    <p class="fs-4">When you first log in, you will be prompted to the home page where your existing entries will be. Here you can edit reviews or delete movies from each section. You can also choose to randomise a movie to watch if you can't decide!</p>
+                    <img class="function-img img-fluid" src="~/images/function-info.png" />
+                </div>
+                <div class="col">
+                    <h1>Review. Watchlist. Avoid</h1>
+                    <p class="fs-4">Your review, watchlist and avoid will be the heart of your diary, keeping track of movies you watched, want to watch and movies you would not recommend to anyone. These functions will also determine what appears in the recommended of your discover page. </p>
+                    <img class="buttons-img img-fluid" src="~/images/button-info.png" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <h1>Searching.</h1>
+                    <p class="fs-4">The search function is a easy to use feature to find your desired movie quick! Simply click on the 'Search and Discover' button at the top right of the screen and you will be redirected to the search and discover page. Here you can search movies or find new one's you may like (or not like).</p>
+                    <img class="search-img img-fluid" src="~/images/search-info.png" />
+                    <img class="search-btn-img img-fluid" src="~/images/search-btn-img.png" />
+                </div>
+            </div>
+
+            <div class="row mt-3 border-top">
+                <h1>Technologies Used.</h1>
+                <div class="col">
+                    <p class="fs-3 text-decoration-underline">.NET Framework</p>
                     <p class="fs-4">Whats is the .NET framework? The .NET framework is an incredibly versatile platform for developing applications.</p>
                     <img src="~/svg/net-logo.svg" />
                 </div>
                 <div class="col">
-                    <h1>TMDB API</h1>
+                    <p class="fs-3 text-decoration-underline">TMDB API</p>
                     <p class="fs-4">The TMDB is a great API I used to retrieve the data for this project. Using the API allowed me to manipulate the data around the application.</p>
                     <img class="tmdb-info" src="~/svg/tmdb.svg" />
                 </div>
                 <div class="col">
-                    <h1>Model, View, Controller</h1>
+                    <p class="fs-3 text-decoration-underline">Model, View, Controller</p>
                     <p class="fs-4">For the backend, I used MVC, which is a software design pattern I used for relating the underlying data to the user interface. The model will store the data logic in which the controller will decide where and how this data is displayed, the view will represent the model.</p>
                 </div>
 
             </div>
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col">
-                    <h1>Bootstrap, SCSS</h1>
+                    <p class="fs-3 text-decoration-underline">Bootstrap, SCSS</p>
                     <p class="fs-4">For the front-end of the application I used bootstrap which is an open-source CSS framework. Bootstrap also uses SASS (scripting language that compiles CSS) which I used to style HTML components.</p>
                     <img class="tmdb-info" src="~/svg/bootstrap.svg" />
                 </div>
                 <div class="col">
-                    <h1>Database and Deployment</h1>
+                    <p class="fs-3 text-decoration-underline">Database and Deployment</p>
                     <p class="fs-4">I used a SQL database to store information securely. I utilized SQL server management studio (SSMS) to view or modify tables. When deploying to a live cloud server. I used Microsoft Azure with a PostgreSQL database for it's security and optimisation.</p>
                     <img src="~/svg/azure.svg" />
                 </div>
 
                 <div class="col">
-                    <h1>Routing via Axios</h1>
-                    <p class="fs-4">TBD</p>
+                    <p class="fs-3 text-decoration-underline">Axios</p>
+                    <p class="fs-4">To do my HTTP requests I used Axios which is a JavaScript library. It has a very extensible interface in a small package.</p>
+                    <img class="axios-info" src="~/svg/axios.svg" />
                 </div>
             </div>
         </div>
-@*        <div class="row">
-            <div class="col">
-                <h1 class="fs-4">Optimisation. Methodolgies. Functions</h1>
-                <p class="fs-4">TBD</p>
+        <div class="row mt-3 border-top">
+            <div class="col text-center">
+                <h1>Optimisation. Methodolgies. Functions.</h1>
+                <p class="fs-4">Working with multiple different API endpoints alongside the database, I had the make sure that data would be transferred at a acceptable speed for one, to improve user experience and two, less load on the application and the database. So, I had to optimise the code, use appropriate methodologies and tweak my functions to ensure effecieny, safety and speed.  </p>
+                <img class="mvc-img img-fluid" src="~/images/mvc.jpg" />
+                <p class="fs-4">Creating well structured functions was important to improve responsiveness to the application. Using 'async' and 'await' for asynchronous programming ensured that the functions will be ran without blocking the execution of the program, meaning that if a task is begun, the application does not have to wait for that task to finish, it can continue with other tasks. In simple terms, it allows the application to run smoother and effeciently because multiple things can be done at once.</p>
             </div>
-        </div>*@
+        </div>
+        <div class="row mt-3 border-top">
+            <div class="col text-center">
+                <h1>Special thanks to TMDB API!</h1>
+                <img class="tmdb-info-big img-fluid" src="~/svg/tmdb.svg" />
+            </div>
+        </div>
     </div>
 </body>
 
