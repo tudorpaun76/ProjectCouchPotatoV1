@@ -243,7 +243,6 @@ namespace ProjectCouchPotatoV1.Search
                     movie.Cast = castJson["cast"].ToObject<List<Cast>>();
                 }
 
-
                 return searchResult;
             }
         }

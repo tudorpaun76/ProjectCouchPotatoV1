@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using ProjectCouchPotatoV1.Areas.Identity.Data;
 using System.Security.Claims;
 using Microsoft.Ajax.Utilities;
+using System.Net;
+using System.Web;
 
 namespace ProjectCouchPotatoV1.Controllers
 {
@@ -88,34 +90,6 @@ namespace ProjectCouchPotatoV1.Controllers
             }
         }
 
-        [Route("searchreview")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> SearchReview(string name)
-        {
-            var data = await _tmdbService.GetMovieDataReview(name);
-            return View(data);
-        }
-
-        [Route("searchwatchlist")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> SearchWatchlist(string name)
-        {
-            var data = await _tmdbService.GetMovieDataWatchlist(name);
-            return View(data);
-        }
-
-
-        [Route("searchavoid")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> SearchAvoid(string name)
-        {
-            var data = await _tmdbService.GetMovieDataAvoid(name);
-            return View(data);
-        }
-
         [Route("searchmovie")]
         [HttpGet]
         [AllowAnonymous]
@@ -158,6 +132,11 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var movies = _dbContext.Reviews.Where(r => r.UserId == userId).ToList();
+            foreach (var movie in movies)
+            {
+                movie.Overview = HttpUtility.HtmlDecode(movie.Overview);
+                movie.Title = HttpUtility.HtmlDecode(movie.Title);
+            }
             return Ok(movies);
         }
 
@@ -168,6 +147,11 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var movies = _dbContext.Watchlists.Where(r => r.UserId == userId).ToList();
+            foreach (var movie in movies)
+            {
+                movie.Overview = HttpUtility.HtmlDecode(movie.Overview);
+                movie.Title = HttpUtility.HtmlDecode(movie.Title);
+            }
             return Ok(movies);
         }
 
@@ -178,6 +162,11 @@ namespace ProjectCouchPotatoV1.Controllers
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var movies = _dbContext.MovieToAvoid.Where(r => r.UserId == userId).ToList();
+            foreach (var movie in movies)
+            {
+                movie.Overview = HttpUtility.HtmlDecode(movie.Overview);
+                movie.Title = HttpUtility.HtmlDecode(movie.Title);
+            }
             return Ok(movies);
         }
 
